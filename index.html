@@ -451,7 +451,7 @@
     }
     
     // =========================================================================
-    // AREA 1: PEDRA BRANCA (83m x 60m) - REFEITO FIELMENTE À PLANTA TÉCNICA OFICIAL
+    // AREA 1: PEDRA BRANCA (83m x 60m) - EXATAMENTE COMO NA PLANTA OFICIAL ANEXA
     // =========================================================================
     function drawPedraBrancaArea(ox, oy, m) {
       const width = 83 * m;  
@@ -464,12 +464,15 @@
       ctx.fillStyle = '#0f172a';
       ctx.fillRect(ox, oy, width, height);
       
+      // Título Superior Externo (Exatamente como no anexo)
       ctx.fillStyle = '#f8fafc';
       ctx.font = 'bold 16px Inter, sans-serif';
-      ctx.fillText('PEDRA BRANCA', ox + 15, oy - 15);
-      ctx.font = '12px Inter, sans-serif';
-      ctx.fillStyle = '#94a3b8';
-      ctx.fillText('Dimensões: 83m × 60m (4.980 m²)', ox + 155, oy - 15);
+      ctx.textAlign = 'center';
+      ctx.fillText('PEDRA BRANCA', ox + width / 2, oy - 35);
+      
+      ctx.textAlign = 'left';
+      ctx.font = 'bold 13px Inter, sans-serif';
+      ctx.fillText('83 m', ox + width / 2 - 15, oy - 15);
       
       interactiveObjects.push({
         x: ox, y: oy, w: width, h: height,
@@ -482,31 +485,27 @@
         ]
       });
 
-      // Posições X das colunas duplas de banana (Esquerda e Direita)
       const bananaXLeft1 = ox + 1.5 * m;
       const bananaXLeft2 = ox + 3.5 * m;
       const bananaXRight1 = ox + width - 3.5 * m;
       const bananaXRight2 = ox + width - 1.5 * m;
 
-      // Posições Y das faixas de Abacaxi (Topo, Centro e Base)
       const abacaxiY1 = oy + 1.5 * m;
       const abacaxiY2 = oy + height / 2;
       const abacaxiY3 = oy + height - 1.5 * m;
       const abacaxiYPositions = [abacaxiY1, abacaxiY2, abacaxiY3];
 
       if (showCrops) {
-        // A. BANANAS - Colunas Duplas nas extremidades Esquerda e Direita (24 plantas por coluna = 96 total)
+        // A. BANANAS - Colunas Duplas nas extremidades
         for (let row = 0; row < 24; row++) {
           const py = oy + 1.25 * m + row * 2.5 * m;
-          // Esquerda (Coluna Dupla)
           drawPlantCircle(bananaXLeft1, py, 3.8, '#facc15', '#ca8a04');
           drawPlantCircle(bananaXLeft2, py, 3.8, '#facc15', '#ca8a04');
-          // Direita (Coluna Dupla)
           drawPlantCircle(bananaXRight1, py, 3.8, '#facc15', '#ca8a04');
           drawPlantCircle(bananaXRight2, py, 3.8, '#facc15', '#ca8a04');
         }
 
-        // B. ABACAXI - 3 Faixas Duplas Horizontais (Topo, Centro, Base)
+        // B. ABACAXI - 3 Faixas Duplas Horizontais
         const abacaxiStartX = ox + 4.5 * m;
         const abacaxiEndX = ox + width - 4.5 * m;
         abacaxiYPositions.forEach((yPos) => {
@@ -526,17 +525,13 @@
           }
         });
 
-        // C. MELANCIA - 20 Linhas Horizontais entre as colunas duplas de banana
-        const melanciaStartY = oy + 3.75 * m;
+        // C. MELANCIA - 20 Linhas Horizontais
         const melanciaStepY = 2.5 * m;
-        let mRow = 0;
         for (let i = 0; i < 24; i++) {
           const ly = oy + 1.25 * m + i * melanciaStepY;
-          // Pula as posições onde estão os abacaxis (topo, centro e base)
           if (Math.abs(ly - abacaxiY1) < 1.0 * m || Math.abs(ly - abacaxiY2) < 1.0 * m || Math.abs(ly - abacaxiY3) < 1.0 * m) {
             continue;
           }
-          mRow++;
           ctx.strokeStyle = '#10b981';
           ctx.lineWidth = 1;
           ctx.beginPath();
@@ -544,7 +539,6 @@
           ctx.lineTo(bananaXRight1 - 1.5 * m, ly);
           ctx.stroke();
 
-          // Plantas de Melancia (espaçamento de 2,0m)
           for (let px = bananaXLeft2 + 2.0 * m; px <= bananaXRight1 - 2.0 * m; px += 2.0 * m) {
             ctx.fillStyle = '#34d399';
             ctx.beginPath();
@@ -552,35 +546,28 @@
             ctx.fill();
           }
         }
-
-        ctx.fillStyle = '#6ee7b7';
-        ctx.font = 'bold 12px Inter, sans-serif';
-        ctx.fillText('MELANCIA (20 Linhas Horizontais)', ox + width / 2 - 110, oy + height / 2 + 25);
       }
       
       if (showIrrigation) {
-        // Reservatório Elevado (4m de Estrutura) no Canto Superior Direito
-        const resX = ox + width + 15;
-        const resY = oy - 55;
-        const resW = 40;
-        const resH = 28;
+        // Reservatório Elevado (4m) no Canto Superior Direito (Externo)
+        const resX = ox + width + 25;
+        const resY = oy - 65;
+        const resW = 45;
+        const resH = 32;
 
-        // Pés do Reservatório Elevado (4m)
         ctx.strokeStyle = '#94a3b8';
         ctx.lineWidth = 2;
         ctx.beginPath();
         ctx.moveTo(resX + 5, resY + resH);
-        ctx.lineTo(resX + 5, oy - 5);
+        ctx.lineTo(resX + 5, oy - 10);
         ctx.moveTo(resX + resW - 5, resY + resH);
-        ctx.lineTo(resX + resW - 5, oy - 5);
-        // Treliça
+        ctx.lineTo(resX + resW - 5, oy - 10);
         ctx.moveTo(resX + 5, resY + resH);
-        ctx.lineTo(resX + resW - 5, oy - 5);
+        ctx.lineTo(resX + resW - 5, oy - 10);
         ctx.moveTo(resX + resW - 5, resY + resH);
-        ctx.lineTo(resX + 5, oy - 5);
+        ctx.lineTo(resX + 5, oy - 10);
         ctx.stroke();
 
-        // Caixa d'Água 1.500L
         ctx.fillStyle = '#0284c7';
         ctx.fillRect(resX, resY, resW, resH);
         ctx.strokeStyle = '#38bdf8';
@@ -588,88 +575,152 @@
         ctx.strokeRect(resX, resY, resW, resH);
         ctx.fillStyle = '#ffffff';
         ctx.font = 'bold 8px Inter, sans-serif';
-        ctx.fillText('RESERVATÓRIO', resX + 2, resY + 11);
-        ctx.fillText('1.500 LITROS', resX + 3, resY + 20);
-        
-        ctx.fillStyle = '#cbd5e1';
-        ctx.font = 'bold 9px Inter, sans-serif';
-        ctx.fillText('ELEVADO (4m)', resX + 45, resY + 15);
+        ctx.fillText('RESERVATÓRIO', resX + 3, resY + 11);
+        ctx.fillText('(1.500 LITROS)', resX + 2, resY + 22);
 
-        // Adutora (300m)
-        const pumpX = ox + width + 120;
-        const pumpY = oy + height + 60;
-        ctx.strokeStyle = '#ef4444';
-        ctx.lineWidth = 2.5;
-        ctx.beginPath();
-        ctx.moveTo(pumpX, pumpY);
-        ctx.lineTo(ox + width + 35, pumpY);
-        ctx.lineTo(ox + width + 35, oy - 35);
-        ctx.lineTo(resX + resW / 2, oy - 35);
-        ctx.lineTo(resX + resW / 2, resY + resH);
-        ctx.stroke();
-        
-        ctx.fillStyle = '#f87171';
-        ctx.font = 'bold 11px Inter, sans-serif';
-        ctx.fillText('ADUTORA (300 m)', ox + width - 120, oy + height / 2 + 10);
-        
-        // Bomba 2,0 CV
-        ctx.fillStyle = '#dc2626';
-        ctx.fillRect(pumpX - 12, pumpY - 12, 24, 24);
-        ctx.strokeStyle = '#fca5a5';
-        ctx.lineWidth = 2;
-        ctx.strokeRect(pumpX - 12, pumpY - 12, 24, 24);
-        ctx.fillStyle = '#ffffff';
+        // Textos externos no topo direito (Exatamente como no anexo)
+        ctx.fillStyle = '#f8fafc';
         ctx.font = 'bold 10px Inter, sans-serif';
-        ctx.fillText('BOMBA', pumpX - 18, pumpY + 24);
-        ctx.fillText('2,0 CV', pumpX - 12, pumpY + 36);
+        ctx.fillText('RESERVATÓRIO (1.500 LITROS)', ox + width + 80, resY - 10);
 
-        // Tubulação Principal
+        ctx.font = 'bold 10px Inter, sans-serif';
+        ctx.fillText('ELEVADO (4m)', ox + width + 90, resY + resH + 15);
+
+        // Adutora (300m) e Tubulação Principal à Direita (Externas)
         const mainLineX = ox + width;
         ctx.strokeStyle = '#0284c7';
         ctx.lineWidth = 4;
         ctx.beginPath();
-        ctx.moveTo(resX + 5, oy - 5);
+        ctx.moveTo(resX + resW / 2, resY + resH);
         ctx.lineTo(mainLineX, oy);
         ctx.lineTo(mainLineX, oy + height);
         ctx.stroke();
-        
+
         ctx.fillStyle = '#38bdf8';
         ctx.font = 'bold 10px Inter, sans-serif';
-        ctx.fillText('TUBULAÇÃO PRINCIPAL', ox + width - 130, oy + height - 20);
+        ctx.save();
+        ctx.translate(mainLineX + 35, oy + height / 2);
+        ctx.rotate(Math.PI / 2);
+        ctx.textAlign = 'center';
+        ctx.fillText('TUBULAÇÃO PRINCIPAL', 0, 0);
+        ctx.restore();
 
-        // Registros e Linhas Laterais
+        // Adutora (300m) externa na extremidade direita
+        ctx.strokeStyle = '#ef4444';
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.moveTo(ox + width + 110, oy + height + 60);
+        ctx.lineTo(ox + width + 35, oy + height + 60);
+        ctx.lineTo(ox + width + 35, oy - 40);
+        ctx.lineTo(resX + resW / 2, oy - 40);
+        ctx.lineTo(resX + resW / 2, resY + resH);
+        ctx.stroke();
+
+        ctx.fillStyle = '#f87171';
+        ctx.font = 'bold 10px Inter, sans-serif';
+        ctx.save();
+        ctx.translate(ox + width + 125, oy + height / 2);
+        ctx.rotate(Math.PI / 2);
+        ctx.textAlign = 'center';
+        ctx.fillText('ADUTORA (300 m)', 0, 0);
+        ctx.restore();
+
+        // Bomba 2CV
+        ctx.fillStyle = '#dc2626';
+        ctx.fillRect(ox + width + 98, oy + height + 48, 24, 24);
+        ctx.strokeStyle = '#fca5a5';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(ox + width + 98, oy + height + 48, 24, 24);
+
+        // Indicações de Registros e Linhas Laterais no canto inferior direito externo
         ctx.strokeStyle = '#38bdf8';
         ctx.lineWidth = 1;
         ctx.setLineDash([3, 3]);
-        
         for (let i = 0; i < 24; i++) {
           const ly = oy + 1.25 * m + i * 2.5 * m;
           ctx.beginPath();
           ctx.moveTo(mainLineX, ly);
           ctx.lineTo(ox, ly);
           ctx.stroke();
-
-          // Desenhar símbolo de Registro de gaveta na conexão
           ctx.fillStyle = '#0ea5e9';
           ctx.fillRect(mainLineX - 3, ly - 2, 4, 4);
         }
         ctx.setLineDash([]);
-        
-        ctx.fillStyle = '#38bdf8';
-        ctx.font = 'bold 9px Inter, sans-serif';
-        ctx.fillText('REGISTROS →', mainLineX + 8, oy + height / 2 + 50);
-        ctx.fillText('LINHAS LATERAIS', mainLineX - 80, oy + height + 15);
+
+        // Seta e texto "REGISTROS" e "LINHAS LATERAIS" abaixo da área (Externos)
+        ctx.strokeStyle = '#38bdf8';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.arc(mainLineX - 10, oy + height + 25, 12, Math.PI, 0, false);
+        ctx.lineTo(mainLineX + 2, oy + height + 35);
+        ctx.stroke();
+
+        ctx.fillStyle = '#f8fafc';
+        ctx.font = 'bold 10px Inter, sans-serif';
+        ctx.fillText('REGISTROS', mainLineX + 15, oy + height + 38);
+
+        ctx.beginPath();
+        ctx.arc(ox + width - 60, oy + height + 25, 15, 0, Math.PI, false);
+        ctx.stroke();
+        ctx.fillText('LINHAS LATERAIS', ox + width - 150, oy + height + 45);
       }
-      
+
       if (showDims) {
-        drawDimensionLine(ox, oy + height + 25, ox + width, oy + height + 25, '83,00 m');
-        drawDimensionLine(ox - 25, oy, ox - 25, oy + height, '60,00 m');
+        // Cotas Externas (Esquerda: 60 m | Superior/Inferior: 83 m)
+        drawDimensionLine(ox, oy + height + 20, ox + width, oy + height + 20, '83 m');
+        drawDimensionLine(ox - 25, oy, ox - 25, oy + height, '60 m');
+
+        // Indicações de espaçamento detalhadas no canto superior esquerdo (Externas ao cultivo)
+        ctx.fillStyle = '#f8fafc';
+        ctx.font = '9px Fira Code, monospace';
+        ctx.fillText('2,0 m', ox + 15, oy - 12);
+        ctx.fillText('0,40 m', ox + 50, oy - 12);
+        ctx.fillText('2,5 m', ox - 50, oy + 25);
+        ctx.fillText('2,5 m', ox - 50, oy + 50);
       }
+
+      // Caixa de Legenda de Culturas na parte inferior externa (exatamente como na planta anexa)
+      const legendX = ox + width / 2 - 100;
+      const legendY = oy + height + 55;
+      ctx.fillStyle = '#0f172a';
+      ctx.strokeStyle = '#334155';
+      ctx.lineWidth = 1;
+      ctx.fillRect(legendX, legendY, 200, 50);
+      ctx.strokeRect(legendX, legendY, 200, 50);
+
+      ctx.fillStyle = '#f8fafc';
+      ctx.font = 'bold 10px Inter, sans-serif';
+      ctx.fillText('CULTURAS:', legendX + 12, legendY + 14);
+
+      // Banana
+      ctx.beginPath();
+      ctx.arc(legendX + 20, legendY + 32, 5, 0, Math.PI * 2);
+      ctx.fillStyle = '#facc15';
+      ctx.fill();
+      ctx.fillText('BANANA', legendX + 32, legendY + 35);
+
+      // Melancia
+      ctx.beginPath();
+      ctx.arc(legendX + 100, legendY + 32, 3.5, 0, Math.PI * 2);
+      ctx.fillStyle = '#34d399';
+      ctx.fill();
+      ctx.fillText('MELANCIA', legendX + 112, legendY + 35);
+
+      // Abacaxi
+      ctx.strokeStyle = '#f97316';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(legendX + 20, legendY + 44);
+      ctx.lineTo(legendX + 35, legendY + 44);
+      ctx.stroke();
+      ctx.fillStyle = '#f8fafc';
+      ctx.fillText('ABACAXI', legendX + 42, legendY + 47);
+
       ctx.restore();
     }
 
     // =========================================================================
-    // AREA 2: MAZAGÃO (100m x 50m) - Mantido com pontas direitas completas
+    // AREA 2: MAZAGÃO (100m x 50m)
     // =========================================================================
     function drawMazagaoArea(ox, oy, m) {
       const width = 100 * m; 
@@ -713,7 +764,6 @@
       const stepBot = (botMelanciaEndY - botMelanciaStartY) / 5;
 
       if (showCrops) {
-        // A. BANANAS - Topo e Base completos
         ctx.fillStyle = '#facc15';
         bananaYTop.concat(bananaYBottom).forEach((by) => {
           for (let x = ox + 1.25 * m; x <= ox + width - 1.25 * m; x += 2.5 * m) {
@@ -726,7 +776,6 @@
         ctx.fillText('Banana (2 Linhas Topo - Ajustadas)', ox + width / 2 - 80, oy + 2 * m);
         ctx.fillText('Banana (2 Linhas Base - Ajustadas)', ox + width / 2 - 80, oy + height - 1 * m);
 
-        // B. ABACAXI CENTRAL
         ctx.strokeStyle = '#f97316';
         ctx.lineWidth = 2;
         ctx.beginPath();
@@ -740,7 +789,6 @@
         ctx.font = 'bold 10px Inter, sans-serif';
         ctx.fillText('Abacaxi Central (Fila Dupla)', ox + width / 2 - 60, centerAbacaxiY - 5);
 
-        // C. MELANCIA
         ctx.strokeStyle = '#10b981';
         ctx.lineWidth = 1.2;
         for (let i = 0; i < 6; i++) {
