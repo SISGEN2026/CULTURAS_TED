@@ -180,7 +180,7 @@
           </div>
           <div class="grid grid-cols-3 gap-2">
             <div class="bg-slate-900 p-2 rounded-lg border border-slate-800 text-center">
-              <span class="text-yellow-400 block font-bold text-lg" id="count-banana">48</span>
+              <span class="text-yellow-400 block font-bold text-lg" id="count-banana">44</span>
               <span class="text-[10px] text-slate-400 block">Bananas</span>
               <span class="text-[9px] text-slate-500 font-mono-code">2,5m × 2,5m</span>
             </div>
@@ -192,12 +192,12 @@
             <div class="bg-slate-900 p-2 rounded-lg border border-slate-800 text-center">
               <span class="text-emerald-400 block font-bold text-lg" id="count-melancia">690</span>
               <span class="text-[10px] text-slate-400 block">Melancias</span>
-              <span class="text-[9px] text-slate-500 font-mono-code">2,5m × 2,0m</span>
+              <span class="text-[9px] text-slate-500 font-mono-code">2,5m × 2m</span>
             </div>
           </div>
           <div class="bg-emerald-950/40 border border-emerald-800/60 rounded-lg p-2.5 flex items-center justify-between">
             <span class="text-slate-300 font-medium">Total de Emissores (Gotejadores):</span>
-            <span id="count-total-emitters" class="font-bold text-emerald-400 text-sm font-mono-code">1.893 un</span>
+            <span id="count-total-emitters" class="font-bold text-emerald-400 text-sm font-mono-code">1.889 un</span>
           </div>
         </div>
         <!-- Hydraulic & Irrigation Calculation Section -->
@@ -213,11 +213,11 @@
             </div>
             <div class="flex justify-between items-center border-b border-slate-800 pb-1.5">
               <span class="text-slate-400">Demanda Diária Total:</span>
-              <span id="panel-daily-flow" class="font-mono-code text-blue-400 font-bold">15.144 Litros/dia</span>
+              <span id="panel-daily-flow" class="font-mono-code text-blue-400 font-bold">15.112 Litros/dia</span>
             </div>
             <div class="flex justify-between items-center border-b border-slate-800 pb-1.5">
               <span class="text-slate-400">Vazão do Sistema (2h de rega):</span>
-              <span class="font-mono-code text-cyan-400 font-bold">7,57 m³/h (2,10 L/s)</span>
+              <span class="font-mono-code text-cyan-400 font-bold">7,56 m³/h (2,10 L/s)</span>
             </div>
             <div class="flex justify-between items-center">
               <span class="text-slate-400">Tubulação Lateral:</span>
@@ -374,29 +374,29 @@
       if (currentArea === 'pedra_branca') {
         title.innerText = 'Pedra Branca';
         dims.innerText = '83m × 60m (Área total: 4.980 m²)';
-        countBanana.innerText = '48';
+        countBanana.innerText = '44';
         countAbacaxi.innerText = '1.155';
         countMelancia.innerText = '690';
-        countTotal.innerText = '1.893 un';
-        dailyFlow.innerText = '15.144 Litros/dia';
+        countTotal.innerText = '1.889 un';
+        dailyFlow.innerText = '15.112 Litros/dia';
         pumpBox.style.display = 'block';
       } else if (currentArea === 'mazagao') {
         title.innerText = 'Mazagão';
         dims.innerText = '100m × 50m (Área total: 5.000 m²)';
-        countBanana.innerText = '160';
+        countBanana.innerText = '152';
         countAbacaxi.innerText = '500';
         countMelancia.innerText = '600';
-        countTotal.innerText = '1.260 un';
-        dailyFlow.innerText = '10.080 Litros/dia';
+        countTotal.innerText = '1.252 un';
+        dailyFlow.innerText = '10.016 Litros/dia';
         pumpBox.style.display = 'none';
       } else {
         title.innerText = 'Visão Geral (Comparativa)';
         dims.innerText = 'Pedra Branca (4.980m²) & Mazagão (5.000m²)';
-        countBanana.innerText = '208';
+        countBanana.innerText = '196';
         countAbacaxi.innerText = '1.655';
         countMelancia.innerText = '1.290';
-        countTotal.innerText = '3.153 un';
-        dailyFlow.innerText = '25.224 Litros/dia';
+        countTotal.innerText = '3.141 un';
+        dailyFlow.innerText = '25.128 Litros/dia';
         pumpBox.style.display = 'block';
       }
     }
@@ -489,8 +489,8 @@
         title: 'Área Pedra Branca',
         details: [
           'Tamanho: 83m × 60m (4.980 m²)',
-          'Total Plantas: 1.893 unidades',
-          'Vazão Diária: 15.144 Litros/dia',
+          'Total Plantas: 1.889 unidades',
+          'Vazão Diária: 15.112 Litros/dia',
           'Irrigação: Gotejamento local + Reservatório'
         ]
       });
@@ -501,15 +501,17 @@
       const melanciaStartY = oy + 8 * m;
       const melanciaEndY = oy + height - 8 * m;
       const melanciaStepY = (melanciaEndY - melanciaStartY) / 22;
-
       if (showCrops) {
-        // A. BANANA - Linhas nas extremidades laterais no espaçamento 2,5m x 2,5m
+        // A. BANANA - Linhas nas extremidades laterais no espaçamento 2,5m x 2,5m (com remoção de 4 plantas nas pontas superior e inferior)
         const bananaMarginLeftX = ox + 1.25 * m;
         const bananaMarginRightX = ox + width - 1.25 * m;
         ctx.fillStyle = '#facc15';
         for (let y = 1.25 * m; y <= height - 1.25 * m; y += 2.5 * m) {
-          drawPlantCircle(bananaMarginLeftX, oy + y, 3.5, '#facc15', '#ca8a04');
-          drawPlantCircle(bananaMarginRightX, oy + y, 3.5, '#facc15', '#ca8a04');
+          // Omitir 1ª e última planta em cada linha lateral (totalizando 4 plantas a menos: 2 em cima, 2 embaixo)
+          if (y > 1.25 * m && y < height - 1.25 * m) {
+            drawPlantCircle(bananaMarginLeftX, oy + y, 3.5, '#facc15', '#ca8a04');
+            drawPlantCircle(bananaMarginRightX, oy + y, 3.5, '#facc15', '#ca8a04');
+          }
         }
         // B. ABACAXI - 3 Faixas de Fila Dupla
         const abacaxiStartX = ox + 5 * m;
@@ -614,20 +616,21 @@
         ctx.fillStyle = '#38bdf8';
         ctx.font = 'bold 10px Inter, sans-serif';
         ctx.fillText('Tubulação Principal (Borda dos 60m - Direita)', ox + width - 210, oy + 12);
-        // D. Linhas de Gotejamento DERIVANDO DA TUBULAÇÃO PRINCIPAL (Horizontais, rotacionadas 90º)
+        // D. Linhas de Gotejamento DERIVANDO DA TUBULAÇÃO PRINCIPAL (Horizontais) - removendo as 4 linhas correspondentes às bananas retiradas
         ctx.strokeStyle = '#38bdf8';
         ctx.lineWidth = 1;
         ctx.setLineDash([3, 3]);
         
-        // Gotejamento nas linhas de Banana (Horizontais, alimentadas pela tubulação principal)
+        // Gotejamento nas linhas de Banana (retirando o gotejamento das 4 plantas suprimidas)
         for (let y = 1.25 * m; y <= height - 1.25 * m; y += 2.5 * m) {
-          ctx.beginPath();
-          ctx.moveTo(mainLineX, oy + y);
-          ctx.lineTo(ox, oy + y);
-          ctx.stroke();
+          if (y > 1.25 * m && y < height - 1.25 * m) {
+            ctx.beginPath();
+            ctx.moveTo(mainLineX, oy + y);
+            ctx.lineTo(ox, oy + y);
+            ctx.stroke();
+          }
         }
-
-        // Gotejamento nas 23 linhas de Melancia (Horizontais, derivando da tubulação principal)
+        // Gotejamento nas 23 linhas de Melancia
         for (let i = 0; i < 23; i++) {
           const ly = melanciaStartY + i * melanciaStepY;
           ctx.beginPath();
@@ -635,8 +638,7 @@
           ctx.lineTo(ox, ly);
           ctx.stroke();
         }
-        
-        // Gotejamento nas 3 faixas duplas de Abacaxi (Horizontais, derivando da tubulação principal)
+        // Gotejamento nas 3 faixas duplas de Abacaxi
         abacaxiYPositions.forEach((yPos) => {
           ctx.beginPath();
           ctx.moveTo(mainLineX, yPos);
@@ -679,8 +681,8 @@
         title: 'Área Mazagão',
         details: [
           'Tamanho: 100m × 50m (5.000 m²)',
-          'Total Plantas: 1.260 unidades',
-          'Vazão Diária: 10.080 Litros/dia',
+          'Total Plantas: 1.252 unidades',
+          'Vazão Diária: 10.016 Litros/dia',
           'Irrigação: Captação com Poço + Reservatório Integrado (1.500L)'
         ]
       });
@@ -696,20 +698,33 @@
       const botMelanciaStartY = centerAbacaxiY + 4 * m;
       const botMelanciaEndY = oy + height - 8 * m;
       const stepBot = (botMelanciaEndY - botMelanciaStartY) / 5;
-      // 2. CROPS LAYOUT (Mazagão - Sentido 100m com Banana 2,5m x 2,5m = 160 plantas)
+      // 2. CROPS LAYOUT (Mazagão - Com retirada de 4 plantas na direita da linha dupla superior e 4 na linha dupla inferior)
       if (showCrops) {
-        // A. BANANA - 2 Linhas no topo e 2 Linhas na base (40 plantas por linha = 160 plantas)
         ctx.fillStyle = '#facc15';
-        bananaYTop.concat(bananaYBottom).forEach(by => {
+        bananaYTop.concat(bananaYBottom).forEach((by, lineIdx) => {
+          let plantCount = 0;
           for (let x = ox + 1.25 * m; x <= ox + width - 1.25 * m; x += 2.5 * m) {
+            plantCount++;
+            // Se for uma das 4 linhas (topo 1, topo 2, base 1, base 2):
+            // Retirar 4 na direita da linha dupla superior (linha 2 de topo) e 4 na linha dupla inferior (linha 1 de base)
+            let isTopDoubleUpper = (lineIdx === 0);
+            let isTopDoubleLower = (lineIdx === 1);
+            let isBotDoubleUpper = (lineIdx === 2);
+            let isBotDoubleLower = (lineIdx === 3);
+            
+            // Retirar 4 últimas plantas (direita) nas linhas 2 e 3 (índices 1 e 2)
+            if ((isTopDoubleLower || isBotDoubleUpper) && plantCount > 36) {
+              // Omitir essas 4 plantas
+              continue;
+            }
             drawPlantCircle(x, by, 3.5, '#facc15', '#ca8a04');
           }
         });
         
         ctx.fillStyle = '#fef08a';
         ctx.font = 'bold 10px Inter, sans-serif';
-        ctx.fillText('Banana (2 Linhas Topo - 2,5m × 2,5m)', ox + width / 2 - 80, oy + 2 * m);
-        ctx.fillText('Banana (2 Linhas Base - 2,5m × 2,5m)', ox + width / 2 - 80, oy + height - 1 * m);
+        ctx.fillText('Banana (2 Linhas Topo - Ajustadas)', ox + width / 2 - 80, oy + 2 * m);
+        ctx.fillText('Banana (2 Linhas Base - Ajustadas)', ox + width / 2 - 80, oy + height - 1 * m);
         // B. ABACAXI - 2 Linhas em fila dupla ao centro
         ctx.strokeStyle = '#f97316';
         ctx.lineWidth = 2;
