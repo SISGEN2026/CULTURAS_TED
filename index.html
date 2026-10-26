@@ -280,8 +280,9 @@
     
     function resizeCanvas() {
       if (!container || !canvas) return;
-      const width = container.clientWidth || window.innerWidth;
-      const height = container.clientHeight || window.innerHeight;
+      const rect = container.getBoundingClientRect();
+      const width = rect.width || container.clientWidth || window.innerWidth;
+      const height = rect.height || container.clientHeight || window.innerHeight;
       if (width > 0 && height > 0) {
         canvas.width = width;
         canvas.height = height;
@@ -327,8 +328,10 @@
         : 'px-3 py-1.5 rounded-md text-slate-400 hover:text-white transition-all flex items-center gap-2 hidden lg:flex';
       
       updatePanelData();
-      resizeCanvas();
-      resetCamera();
+      setTimeout(() => {
+        resizeCanvas();
+        resetCamera();
+      }, 10);
     }
     
     function togglePanel() {
@@ -385,7 +388,7 @@
     
     // --- MAIN DRAWING RENDER LOOP ---
     function drawCanvas() {
-      if (!ctx || canvas.width === 0 || canvas.height === 0) return;
+      if (!ctx || !canvas || canvas.width === 0 || canvas.height === 0) return;
       
       interactiveObjects = [];
       ctx.save();
@@ -450,11 +453,11 @@
       ctx.fillStyle = '#0f172a';
       ctx.fillRect(ox, oy, width, height);
       
-      // Título Superior Externo conforme o desenho original[cite: 17]
+      // Título Superior Externo conforme o desenho original
       ctx.fillStyle = '#f8fafc';
       ctx.font = 'bold 16px Inter, sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText('PEDRA BRANCA', ox + width / 2, oy - 35);[cite: 17]
+      ctx.fillText('PEDRA BRANCA', ox + width / 2, oy - 35);
       
       interactiveObjects.push({
         x: ox, y: oy, w: width, h: height,
@@ -478,7 +481,7 @@
       const abacaxiYPositions = [abacaxiY1, abacaxiY2, abacaxiY3];
 
       if (showCrops) {
-        // A. BANANAS - Colunas Duplas nas extremidades[cite: 17]
+        // A. BANANAS - Colunas Duplas nas extremidades
         for (let row = 0; row < 24; row++) {
           const py = oy + 1.25 * m + row * 2.5 * m;
           drawPlantCircle(bananaXLeft1, py, 3.8, '#facc15', '#ca8a04');
@@ -487,7 +490,7 @@
           drawPlantCircle(bananaXRight2, py, 3.8, '#facc15', '#ca8a04');
         }
 
-        // B. ABACAXI - 3 Faixas Duplas Horizontais[cite: 17]
+        // B. ABACAXI - 3 Faixas Duplas Horizontais
         const abacaxiStartX = ox + 4.5 * m;
         const abacaxiEndX = ox + width - 4.5 * m;
         abacaxiYPositions.forEach((yPos) => {
@@ -507,7 +510,7 @@
           }
         });
 
-        // C. MELANCIA - 20 Linhas Horizontais[cite: 17]
+        // C. MELANCIA - 20 Linhas Horizontais
         const melanciaStepY = 2.5 * m;
         for (let i = 0; i < 24; i++) {
           const ly = oy + 1.25 * m + i * melanciaStepY;
@@ -531,7 +534,7 @@
       }
       
       if (showIrrigation) {
-        // Reservatório Elevado (4m) no Canto Superior Direito conforme o desenho[cite: 17]
+        // Reservatório Elevado (4m) no Canto Superior Direito conforme o desenho
         const resX = ox + width + 25;
         const resY = oy - 65;
         const resW = 45;
@@ -554,7 +557,7 @@
         ctx.lineWidth = 2;
         ctx.strokeRect(resX, resY, resW, resH);
 
-        // Tubulação Principal e Adutora à Direita conforme desenho[cite: 17]
+        // Tubulação Principal e Adutora à Direita conforme desenho
         const mainLineX = ox + width;
         ctx.strokeStyle = '#0284c7';
         ctx.lineWidth = 4;
