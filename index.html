@@ -451,7 +451,7 @@
     }
     
     // =========================================================================
-    // AREA 1: PEDRA BRANCA (83m x 60m) - EXATAMENTE COMO NA PLANTA OFICIAL ANEXA
+    // AREA 1: PEDRA BRANCA (83m x 60m) - EXATAMENTE CONFORME PLANTA ANEXA 3
     // =========================================================================
     function drawPedraBrancaArea(ox, oy, m) {
       const width = 83 * m;  
@@ -464,7 +464,7 @@
       ctx.fillStyle = '#0f172a';
       ctx.fillRect(ox, oy, width, height);
       
-      // Título Superior Externo (Exatamente como no anexo)
+      // Título Superior Externo
       ctx.fillStyle = '#f8fafc';
       ctx.font = 'bold 16px Inter, sans-serif';
       ctx.textAlign = 'center';
@@ -578,7 +578,7 @@
         ctx.fillText('RESERVATÓRIO', resX + 3, resY + 11);
         ctx.fillText('(1.500 LITROS)', resX + 2, resY + 22);
 
-        // Textos externos no topo direito (Exatamente como no anexo)
+        // Textos externos no topo direito
         ctx.fillStyle = '#f8fafc';
         ctx.font = 'bold 10px Inter, sans-serif';
         ctx.fillText('RESERVATÓRIO (1.500 LITROS)', ox + width + 80, resY - 10);
@@ -647,7 +647,7 @@
         }
         ctx.setLineDash([]);
 
-        // Seta e texto "REGISTROS" e "LINHAS LATERAIS" abaixo da área (Externos)
+        // Seta e texto "REGISTROS" e "LINHAS LATERAIS" abaixo da área
         ctx.strokeStyle = '#38bdf8';
         ctx.lineWidth = 1.5;
         ctx.beginPath();
@@ -670,7 +670,7 @@
         drawDimensionLine(ox, oy + height + 20, ox + width, oy + height + 20, '83 m');
         drawDimensionLine(ox - 25, oy, ox - 25, oy + height, '60 m');
 
-        // Indicações de espaçamento detalhadas no canto superior esquerdo (Externas ao cultivo)
+        // Indicações de espaçamento detalhadas no canto superior esquerdo
         ctx.fillStyle = '#f8fafc';
         ctx.font = '9px Fira Code, monospace';
         ctx.fillText('2,0 m', ox + 15, oy - 12);
@@ -679,42 +679,59 @@
         ctx.fillText('2,5 m', ox - 50, oy + 50);
       }
 
-      // Caixa de Legenda de Culturas na parte inferior externa (exatamente como na planta anexa)
-      const legendX = ox + width / 2 - 100;
-      const legendY = oy + height + 55;
+      // Caixa de ESPAÇAMENTOS no canto inferior esquerdo (Conforme Anexo 3)
+      const espX = ox;
+      const espY = oy + height + 35;
       ctx.fillStyle = '#0f172a';
       ctx.strokeStyle = '#334155';
       ctx.lineWidth = 1;
-      ctx.fillRect(legendX, legendY, 200, 50);
-      ctx.strokeRect(legendX, legendY, 200, 50);
+      ctx.fillRect(espX, espY, 175, 75);
+      ctx.strokeRect(espX, espY, 175, 75);
 
       ctx.fillStyle = '#f8fafc';
       ctx.font = 'bold 10px Inter, sans-serif';
-      ctx.fillText('CULTURAS:', legendX + 12, legendY + 14);
+      ctx.fillText('ESPAÇAMENTOS:', espX + 12, espY + 16);
+      ctx.font = '10px Inter, sans-serif';
+      ctx.fillText('BANANA - 2,5 X 2,0 m', espX + 12, espY + 34);
+      ctx.fillText('MELANCIA - 2,5 X 2,0 m', espX + 12, espY + 50);
+      ctx.fillText('ABACAXI - 0,4 X 0,4 m', espX + 12, espY + 66);
+
+      // Caixa de Legenda de CULTURAS na parte inferior central
+      const legendX = ox + width / 2 - 80;
+      const legendY = oy + height + 35;
+      ctx.fillStyle = '#0f172a';
+      ctx.strokeStyle = '#334155';
+      ctx.lineWidth = 1;
+      ctx.fillRect(legendX, legendY, 180, 75);
+      ctx.strokeRect(legendX, legendY, 180, 75);
+
+      ctx.fillStyle = '#f8fafc';
+      ctx.font = 'bold 10px Inter, sans-serif';
+      ctx.fillText('CULTURAS:', legendX + 12, legendY + 16);
 
       // Banana
       ctx.beginPath();
-      ctx.arc(legendX + 20, legendY + 32, 5, 0, Math.PI * 2);
+      ctx.arc(legendX + 20, legendY + 34, 5, 0, Math.PI * 2);
       ctx.fillStyle = '#facc15';
       ctx.fill();
-      ctx.fillText('BANANA', legendX + 32, legendY + 35);
+      ctx.fillText('BANANA', legendX + 35, legendY + 37);
 
       // Melancia
       ctx.beginPath();
-      ctx.arc(legendX + 100, legendY + 32, 3.5, 0, Math.PI * 2);
+      ctx.arc(legendX + 20, legendY + 50, 3.5, 0, Math.PI * 2);
       ctx.fillStyle = '#34d399';
       ctx.fill();
-      ctx.fillText('MELANCIA', legendX + 112, legendY + 35);
+      ctx.fillText('MELANCIA', legendX + 35, legendY + 53);
 
       // Abacaxi
       ctx.strokeStyle = '#f97316';
       ctx.lineWidth = 2;
       ctx.beginPath();
-      ctx.moveTo(legendX + 20, legendY + 44);
-      ctx.lineTo(legendX + 35, legendY + 44);
+      ctx.moveTo(legendX + 15, legendY + 66);
+      ctx.lineTo(legendX + 30, legendY + 66);
       ctx.stroke();
       ctx.fillStyle = '#f8fafc';
-      ctx.fillText('ABACAXI', legendX + 42, legendY + 47);
+      ctx.fillText('ABACAXI', legendX + 35, legendY + 69);
 
       ctx.restore();
     }
