@@ -313,9 +313,9 @@
     let interactiveObjects = [];
     
     function resizeCanvas() {
-      if (!container) return;
-      const width = container.clientWidth;
-      const height = container.clientHeight;
+      if (!container || !canvas) return;
+      const width = container.clientWidth || window.innerWidth;
+      const height = container.clientHeight || window.innerHeight;
       if (width > 0 && height > 0) {
         canvas.width = width;
         canvas.height = height;
@@ -323,11 +323,14 @@
       }
     }
 
-    // Usando ResizeObserver para detecção robusta de redimensionamento do contêiner
+    // ResizeObserver para detecção robusta de redimensionamento do contêiner
     const resizeObserver = new ResizeObserver(() => {
       resizeCanvas();
     });
-    resizeObserver.observe(container);
+    if (container) {
+      resizeObserver.observe(container);
+    }
+    window.addEventListener('resize', resizeCanvas);
 
     function resetCamera() {
       scale = 0.9;
@@ -335,8 +338,8 @@
         panX = 80;
         panY = 120;
       } else if (currentArea === 'mazagao') {
-        panX = 120;
-        panY = 150;
+        panX = 100;
+        panY = 100;
       } else {
         panX = 120;
         panY = 120;
@@ -359,6 +362,7 @@
         : 'px-3 py-1.5 rounded-md text-slate-400 hover:text-white transition-all flex items-center gap-2 hidden lg:flex';
       
       updatePanelData();
+      resizeCanvas();
       resetCamera();
     }
     
