@@ -129,9 +129,9 @@
         <i class="fa-solid fa-list-check text-slate-500"></i>
       </div>
       <div class="grid grid-cols-2 gap-x-3 gap-y-1.5 text-[11px]">
-        <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-yellow-400 inline-block border border-yellow-600"></span> Banana (3m × 3m)</div>
+        <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-yellow-400 inline-block border border-yellow-600"></span> Banana (2,5m × 2,5m)</div>
         <div class="flex items-center gap-2"><span class="w-3 h-3 rounded bg-amber-500 inline-block border border-amber-700"></span> Abacaxi (Fil. Dupla)</div>
-        <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-emerald-500 inline-block border border-emerald-700"></span> Melancia (2.5m × 2m)</div>
+        <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-emerald-500 inline-block border border-emerald-700"></span> Melancia (2,5m × 2m)</div>
         <div class="flex items-center gap-2"><span class="w-3 h-1 bg-blue-500 inline-block"></span> Tubulação Principal</div>
         <div class="flex items-center gap-2"><span class="w-3 h-0.5 bg-cyan-400 border-t border-dashed border-cyan-400 inline-block"></span> Linha Gotejamento</div>
         <div class="flex items-center gap-2"><span class="w-3 h-1 bg-red-500 inline-block"></span> Adutora Captação (300m)</div>
@@ -180,9 +180,9 @@
           </div>
           <div class="grid grid-cols-3 gap-2">
             <div class="bg-slate-900 p-2 rounded-lg border border-slate-800 text-center">
-              <span class="text-yellow-400 block font-bold text-lg" id="count-banana">40</span>
+              <span class="text-yellow-400 block font-bold text-lg" id="count-banana">48</span>
               <span class="text-[10px] text-slate-400 block">Bananas</span>
-              <span class="text-[9px] text-slate-500 font-mono-code">3m × 3m</span>
+              <span class="text-[9px] text-slate-500 font-mono-code">2,5m × 2,5m</span>
             </div>
             <div class="bg-slate-900 p-2 rounded-lg border border-slate-800 text-center">
               <span class="text-amber-400 block font-bold text-lg" id="count-abacaxi">1.155</span>
@@ -192,12 +192,12 @@
             <div class="bg-slate-900 p-2 rounded-lg border border-slate-800 text-center">
               <span class="text-emerald-400 block font-bold text-lg" id="count-melancia">690</span>
               <span class="text-[10px] text-slate-400 block">Melancias</span>
-              <span class="text-[9px] text-slate-500 font-mono-code">2.5m × 2m</span>
+              <span class="text-[9px] text-slate-500 font-mono-code">2,5m × 2,0m</span>
             </div>
           </div>
           <div class="bg-emerald-950/40 border border-emerald-800/60 rounded-lg p-2.5 flex items-center justify-between">
             <span class="text-slate-300 font-medium">Total de Emissores (Gotejadores):</span>
-            <span id="count-total-emitters" class="font-bold text-emerald-400 text-sm font-mono-code">1.885 un</span>
+            <span id="count-total-emitters" class="font-bold text-emerald-400 text-sm font-mono-code">1.893 un</span>
           </div>
         </div>
         <!-- Hydraulic & Irrigation Calculation Section -->
@@ -213,11 +213,11 @@
             </div>
             <div class="flex justify-between items-center border-b border-slate-800 pb-1.5">
               <span class="text-slate-400">Demanda Diária Total:</span>
-              <span id="panel-daily-flow" class="font-mono-code text-blue-400 font-bold">15.080 Litros/dia</span>
+              <span id="panel-daily-flow" class="font-mono-code text-blue-400 font-bold">15.144 Litros/dia</span>
             </div>
             <div class="flex justify-between items-center border-b border-slate-800 pb-1.5">
               <span class="text-slate-400">Vazão do Sistema (2h de rega):</span>
-              <span class="font-mono-code text-cyan-400 font-bold">7,54 m³/h (2,10 L/s)</span>
+              <span class="font-mono-code text-cyan-400 font-bold">7,57 m³/h (2,10 L/s)</span>
             </div>
             <div class="flex justify-between items-center">
               <span class="text-slate-400">Tubulação Lateral:</span>
@@ -275,7 +275,7 @@
             <div class="flex items-start gap-2">
               <span class="w-2 h-2 rounded-full bg-yellow-400 mt-1 shrink-0"></span>
               <div>
-                <strong class="text-slate-200">Banana:</strong> 3,0m entre linhas × 3,0m entre plantas. Densa proteção de borda contra ventos.
+                <strong class="text-slate-200">Banana:</strong> 2,5m × 2,5m. Densa proteção de borda e alinhamento ajustado.
               </div>
             </div>
             <div class="flex items-start gap-2">
@@ -374,29 +374,29 @@
       if (currentArea === 'pedra_branca') {
         title.innerText = 'Pedra Branca';
         dims.innerText = '83m × 60m (Área total: 4.980 m²)';
-        countBanana.innerText = '40';
+        countBanana.innerText = '48';
         countAbacaxi.innerText = '1.155';
         countMelancia.innerText = '690';
-        countTotal.innerText = '1.885 un';
-        dailyFlow.innerText = '15.080 Litros/dia';
+        countTotal.innerText = '1.893 un';
+        dailyFlow.innerText = '15.144 Litros/dia';
         pumpBox.style.display = 'block';
       } else if (currentArea === 'mazagao') {
         title.innerText = 'Mazagão';
         dims.innerText = '100m × 50m (Área total: 5.000 m²)';
-        countBanana.innerText = '66';
+        countBanana.innerText = '160';
         countAbacaxi.innerText = '500';
         countMelancia.innerText = '600';
-        countTotal.innerText = '1.166 un';
-        dailyFlow.innerText = '9.328 Litros/dia';
+        countTotal.innerText = '1.260 un';
+        dailyFlow.innerText = '10.080 Litros/dia';
         pumpBox.style.display = 'none';
       } else {
         title.innerText = 'Visão Geral (Comparativa)';
         dims.innerText = 'Pedra Branca (4.980m²) & Mazagão (5.000m²)';
-        countBanana.innerText = '106';
+        countBanana.innerText = '208';
         countAbacaxi.innerText = '1.655';
         countMelancia.innerText = '1.290';
-        countTotal.innerText = '3.051 un';
-        dailyFlow.innerText = '24.408 Litros/dia';
+        countTotal.innerText = '3.153 un';
+        dailyFlow.innerText = '25.224 Litros/dia';
         pumpBox.style.display = 'block';
       }
     }
@@ -470,7 +470,8 @@
       const showCrops = document.getElementById('layer-crops').checked;
       const showIrrigation = document.getElementById('layer-irrigation').checked;
       const showDims = document.getElementById('layer-dimensions').checked;
-      // 1. Land Perimeter Fill (Sem linha de contorno)
+      
+      // 1. Land Perimeter Fill
       ctx.save();
       ctx.fillStyle = '#0f172a';
       ctx.fillRect(ox, oy, width, height);
@@ -482,57 +483,53 @@
       ctx.font = '12px Inter, sans-serif';
       ctx.fillStyle = '#94a3b8';
       ctx.fillText('Dimensões: 83m × 60m (4.980 m²)', ox + 155, oy - 15);
-      // Register area region for hover
+      
       interactiveObjects.push({
         x: ox, y: oy, w: width, h: height,
         title: 'Área Pedra Branca',
         details: [
           'Tamanho: 83m × 60m (4.980 m²)',
-          'Total Plantas: 1.885 unidades',
-          'Vazão Diária: 15.080 Litros/dia',
+          'Total Plantas: 1.893 unidades',
+          'Vazão Diária: 15.144 Litros/dia',
           'Irrigação: Gotejamento local + Reservatório'
         ]
       });
+
       // 2. CROPS LAYOUT
+      const melanciaSpaceX = (width - 12 * m) / 23;
+      const abacaxiYPositions = [oy + 4 * m, oy + height / 2, oy + height - 4 * m];
+
       if (showCrops) {
-        // A. BANANA - Left & Right Margins (3m x 3m spacing)
-        const bananaMarginLeftX = ox + 1.5 * m;
-        const bananaMarginRightX = ox + width - 1.5 * m;
+        // A. BANANA - Linhas laterais no espaçamento 2,5m x 2,5m (24 plantas por linha = 48 total)
+        const bananaMarginLeftX = ox + 1.25 * m;
+        const bananaMarginRightX = ox + width - 1.25 * m;
         ctx.fillStyle = '#facc15';
-        for (let y = 1.5 * m; y < height; y += 3 * m) {
-          // Left Line (20 plants)
-          drawPlantCircle(bananaMarginLeftX, oy + y, 4, '#facc15', '#ca8a04');
-          // Right Line (20 plants)
-          drawPlantCircle(bananaMarginRightX, oy + y, 4, '#facc15', '#ca8a04');
+        for (let y = 1.25 * m; y <= height - 1.25 * m; y += 2.5 * m) {
+          drawPlantCircle(bananaMarginLeftX, oy + y, 3.5, '#facc15', '#ca8a04');
+          drawPlantCircle(bananaMarginRightX, oy + y, 3.5, '#facc15', '#ca8a04');
         }
-        // B. ABACAXI - 3 Double Row Bands (Top, Middle, Bottom)
+
+        // B. ABACAXI - 3 Faixas de Fila Dupla
         const abacaxiStartX = ox + 5 * m;
         const abacaxiEndX = ox + width - 5 * m;
-        const abacaxiYPositions = [oy + 4 * m, oy + height / 2, oy + height - 4 * m];
         abacaxiYPositions.forEach((yPos, idx) => {
-          // Double Rows (0.4m spacing between rows)
           ctx.strokeStyle = '#f97316';
           ctx.lineWidth = 2;
-          
-          // Line 1 of Double Row
           ctx.beginPath();
           ctx.moveTo(abacaxiStartX, yPos - 1.5);
           ctx.lineTo(abacaxiEndX, yPos - 1.5);
-          ctx.stroke();
-          // Line 2 of Double Row
-          ctx.beginPath();
           ctx.moveTo(abacaxiStartX, yPos + 1.5);
           ctx.lineTo(abacaxiEndX, yPos + 1.5);
           ctx.stroke();
-          // Label for Pineapple Strip
+          
           ctx.fillStyle = '#fdba74';
           ctx.font = '10px Inter, sans-serif';
           ctx.fillText(`Faixa Abacaxi ${idx + 1} (Fila Dupla)`, abacaxiStartX + 10, yPos - 6);
         });
-        // C. MELANCIA - Center Block (23 lines of 60m horizontal/vertical layout)
+
+        // C. MELANCIA - 23 Linhas de 60m na vertical
         const melanciaStartY = oy + 8 * m;
         const melanciaEndY = oy + height - 8 * m;
-        const melanciaSpaceX = (width - 12 * m) / 23;
         ctx.strokeStyle = '#10b981';
         ctx.lineWidth = 1;
         for (let i = 0; i < 23; i++) {
@@ -541,20 +538,20 @@
           ctx.moveTo(lx, melanciaStartY);
           ctx.lineTo(lx, melanciaEndY);
           ctx.stroke();
-          // Draw dotted plants along watermelon lines
+          
           for (let py = melanciaStartY; py <= melanciaEndY; py += 4 * m) {
             ctx.fillStyle = '#34d399';
             ctx.fillRect(lx - 1.5, py - 1.5, 3, 3);
           }
         }
-        // Central Melancia Label
         ctx.fillStyle = '#6ee7b7';
         ctx.font = 'bold 12px Inter, sans-serif';
         ctx.fillText('MELANCIA (23 Linhas de 60m - 690 Plantas)', ox + width / 2 - 130, oy + height / 2 + 25);
       }
+
       // 3. IRRIGATION SYSTEM
       if (showIrrigation) {
-        // A. Reservoir (Top Right of Area - Capacidade: 1.500 Litros)
+        // A. Reservatório (1.500 Litros)
         const resX = ox + width - 35;
         const resY = oy - 45;
         const resW = 35;
@@ -568,6 +565,7 @@
         ctx.font = 'bold 9px Inter, sans-serif';
         ctx.fillText('RESERV.', resX + 2, resY + 12);
         ctx.fillText('1.500L', resX + 2, resY + 22);
+        
         interactiveObjects.push({
           x: resX, y: resY, w: resW, h: resH,
           title: 'Reservatório Elevado (Pedra Branca)',
@@ -578,11 +576,11 @@
             'Saída: Tubulação principal DN 50mm'
           ]
         });
-        // B. External Well Pump & 300m Pipeline (Bomba 2CV com contorno externo sem passar por cima da área)
-        const pumpX = ox + width + 100; // Visualização da distância de 300m
+
+        // B. Adutora Externa (300m) e Motobomba 2CV
+        const pumpX = ox + width + 100;
         const pumpY = oy + height + 60;
         
-        // Desenho da Adutora (Linha Vermelha de 300m contornando a área externamente)
         ctx.strokeStyle = '#ef4444';
         ctx.lineWidth = 2.5;
         ctx.beginPath();
@@ -593,12 +591,10 @@
         ctx.lineTo(resX + resW / 2, resY + resH);
         ctx.stroke();
         
-        // Pipeline Distance Label
         ctx.fillStyle = '#f87171';
         ctx.font = 'bold 11px Inter, sans-serif';
-        ctx.fillText('Adutora de Captação Externa (300m - Contorno Externo, Elevação +6m)', ox + 20, oy + height + 40);
+        ctx.fillText('Adutora de Captação Externa (300m - Elevação +6m)', ox + 20, oy + height + 40);
         
-        // Icone da Bomba 2CV
         ctx.fillStyle = '#dc2626';
         ctx.fillRect(pumpX - 12, pumpY - 12, 24, 24);
         ctx.strokeStyle = '#fca5a5';
@@ -608,46 +604,45 @@
         ctx.font = 'bold 10px Inter, sans-serif';
         ctx.fillText('BOMBA', pumpX - 18, pumpY + 24);
         ctx.fillText('2,0 CV', pumpX - 12, pumpY + 36);
-        interactiveObjects.push({
-          x: pumpX - 15, y: pumpY - 15, w: 30, h: 30,
-          title: 'Captação Poço & Motobomba PB',
-          details: [
-            'Potência Adotada: 2,0 CV (Alta Performance)',
-            'Distância do Reservatório: 300 metros',
-            'Altura Manométrica (Hmt): 13,26 m.c.a.',
-            'Caminho: Percurso Externo (Fora da área cultivada)'
-          ]
-        });
-        
-        // C. Internal Irrigation Pipes (Somente Tubulação Principal Frontal)
-        // Tubulação Principal (Azul) instalada apenas na borda/frente lateral (lado dos 60m/83m)
+
+        // C. Tubulação Principal (Lado Oposto - Exclusivamente no lado de 60m do lado DIREITO, mesmo lado da adutora)
+        const mainLineX = ox + width;
         ctx.strokeStyle = '#0284c7';
         ctx.lineWidth = 4;
         ctx.beginPath();
         ctx.moveTo(resX + resW / 2, resY + resH);
-        ctx.lineTo(resX + resW / 2, oy);
-        ctx.lineTo(ox, oy); // Linha principal frontal
-        ctx.lineTo(ox, oy + height); // Exclusivamente na borda lateral frontal
+        ctx.lineTo(mainLineX, oy);
+        ctx.lineTo(mainLineX, oy + height);
         ctx.stroke();
         
-        // Rótulo da Tubulação Principal Frontal
         ctx.fillStyle = '#38bdf8';
         ctx.font = 'bold 10px Inter, sans-serif';
-        ctx.fillText('Tubulação Principal Frontal (Borda do Terreno)', ox + 10, oy + 12);
+        ctx.fillText('Tubulação Principal (Borda dos 60m - Direita)', ox + width - 210, oy + 12);
 
-        // Drip Lateral Lines (Cyan Light Dashed Lines)
+        // D. Linhas de Gotejamento em cada linha de Melancia e entre as faixas duplas de Abacaxi
         ctx.strokeStyle = '#38bdf8';
         ctx.lineWidth = 1;
         ctx.setLineDash([3, 3]);
-        // Drip lines over crops alimentadas a partir da tubulação principal na borda
-        for (let y = oy + 4 * m; y < oy + height; y += 6 * m) {
+        
+        // Gotejamento nas 23 linhas de Melancia (verticais)
+        for (let i = 0; i < 23; i++) {
+          const lx = ox + 6 * m + i * melanciaSpaceX;
           ctx.beginPath();
-          ctx.moveTo(ox, y);
-          ctx.lineTo(ox + width - 5 * m, y);
+          ctx.moveTo(lx, oy);
+          ctx.lineTo(lx, oy + height);
           ctx.stroke();
         }
-        ctx.setLineDash([]); // Reset dash
+        
+        // Gotejamento nas 3 faixas duplas de Abacaxi (horizontais)
+        abacaxiYPositions.forEach((yPos) => {
+          ctx.beginPath();
+          ctx.moveTo(ox, yPos);
+          ctx.lineTo(ox + width, yPos);
+          ctx.stroke();
+        });
+        ctx.setLineDash([]);
       }
+
       // 4. DIMENSIONS & COTAS
       if (showDims) {
         drawDimensionLine(ox, oy + height + 15, ox + width, oy + height + 15, '83,00 m');
@@ -655,6 +650,7 @@
       }
       ctx.restore();
     }
+
     // =========================================================================
     // AREA 2: MAZAGÃO (100m x 50m)
     // =========================================================================
@@ -664,54 +660,59 @@
       const showCrops = document.getElementById('layer-crops').checked;
       const showIrrigation = document.getElementById('layer-irrigation').checked;
       const showDims = document.getElementById('layer-dimensions').checked;
-      // 1. Land Perimeter Fill (Sem linha de contorno)
+      
+      // 1. Land Perimeter Fill
       ctx.save();
       ctx.fillStyle = '#0f172a';
       ctx.fillRect(ox, oy, width, height);
       
-      // Add Area Title Label
       ctx.fillStyle = '#f8fafc';
       ctx.font = 'bold 16px Inter, sans-serif';
       ctx.fillText('MAZAGÃO', ox + 15, oy - 15);
       ctx.font = '12px Inter, sans-serif';
       ctx.fillStyle = '#94a3b8';
       ctx.fillText('Dimensões: 100m × 50m (5.000 m²)', ox + 110, oy - 15);
+      
       interactiveObjects.push({
         x: ox, y: oy, w: width, h: height,
         title: 'Área Mazagão',
         details: [
           'Tamanho: 100m × 50m (5.000 m²)',
-          'Total Plantas: 1.166 unidades',
-          'Vazão Diária: 9.328 Litros/dia',
+          'Total Plantas: 1.260 unidades',
+          'Vazão Diária: 10.080 Litros/dia',
           'Irrigação: Captação com Poço + Reservatório Integrado (1.500L)'
         ]
       });
-      // 2. CROPS LAYOUT (Mazagão - Arranjo Horizontal ao longo dos 100m)
+
+      // Posições das culturas horizontais (sentido de 100m)
+      const bananaYTop = [oy + 2.5 * m, oy + 5.0 * m];
+      const bananaYBottom = [oy + height - 5.0 * m, oy + height - 2.5 * m];
+      const centerAbacaxiY = oy + height / 2;
+      
+      const topMelanciaStartY = oy + 8 * m;
+      const topMelanciaEndY = centerAbacaxiY - 4 * m;
+      const stepTop = (topMelanciaEndY - topMelanciaStartY) / 5;
+      
+      const botMelanciaStartY = centerAbacaxiY + 4 * m;
+      const botMelanciaEndY = oy + height - 8 * m;
+      const stepBot = (botMelanciaEndY - botMelanciaStartY) / 5;
+
+      // 2. CROPS LAYOUT (Mazagão - Sentido 100m com Banana 2,5m x 2,5m = 160 plantas)
       if (showCrops) {
-        // A. BANANA - 2 Linhas no topo e 2 Linhas abaixo (dispostas no sentido dos 100m)
-        const bananaYTop = [oy + 3 * m, oy + 6 * m];
-        const bananaYBottom = [oy + height - 6 * m, oy + height - 3 * m];
-        
+        // A. BANANA - 2 Linhas no topo e 2 Linhas na base (40 plantas por linha = 160 plantas)
         ctx.fillStyle = '#facc15';
-        // Desenha as 2 linhas de banana no topo (along 100m)
-        bananaYTop.forEach(by => {
-          for (let x = ox + 3 * m; x <= ox + width - 3 * m; x += 3 * m) {
+        bananaYTop.concat(bananaYBottom).forEach(by => {
+          for (let x = ox + 1.25 * m; x <= ox + width - 1.25 * m; x += 2.5 * m) {
             drawPlantCircle(x, by, 3.5, '#facc15', '#ca8a04');
           }
         });
-        // Desenha as 2 linhas de banana na base/abaixo (along 100m)
-        bananaYBottom.forEach(by => {
-          for (let x = ox + 3 * m; x <= ox + width - 3 * m; x += 3 * m) {
-            drawPlantCircle(x, by, 3.5, '#facc15', '#ca8a04');
-          }
-        });
+        
         ctx.fillStyle = '#fef08a';
         ctx.font = 'bold 10px Inter, sans-serif';
-        ctx.fillText('Banana (2 Linhas Topo)', ox + width / 2 - 50, oy + 2 * m);
-        ctx.fillText('Banana (2 Linhas Base)', ox + width / 2 - 50, oy + height - 1.5 * m);
+        ctx.fillText('Banana (2 Linhas Topo - 2,5m × 2,5m)', ox + width / 2 - 80, oy + 2 * m);
+        ctx.fillText('Banana (2 Linhas Base - 2,5m × 2,5m)', ox + width / 2 - 80, oy + height - 1 * m);
 
-        // B. ABACAXI - 2 Linhas de Abacaxi ao Centro (along 100m)
-        const centerAbacaxiY = oy + height / 2;
+        // B. ABACAXI - 2 Linhas em fila dupla ao centro
         ctx.strokeStyle = '#f97316';
         ctx.lineWidth = 2;
         ctx.beginPath();
@@ -720,54 +721,44 @@
         ctx.moveTo(ox + 3 * m, centerAbacaxiY + 2);
         ctx.lineTo(ox + width - 3 * m, centerAbacaxiY + 2);
         ctx.stroke();
+        
         ctx.fillStyle = '#fdba74';
         ctx.font = 'bold 10px Inter, sans-serif';
-        ctx.fillText('Abacaxi (2 Linhas Centrais em Fila Dupla)', ox + width / 2 - 100, centerAbacaxiY - 5);
+        ctx.fillText('Abacaxi Central (Fila Dupla)', ox + width / 2 - 60, centerAbacaxiY - 5);
 
-        // C. MELANCIA - 6 Linhas entre Banana (Topo) e Abacaxi
-        const topMelanciaStartY = oy + 9 * m;
-        const topMelanciaEndY = centerAbacaxiY - 5 * m;
-        const stepTop = (topMelanciaEndY - topMelanciaStartY) / 5;
+        // C. MELANCIA - 6 Linhas superiores e 6 linhas inferiores (ao longo de 100m)
         ctx.strokeStyle = '#10b981';
         ctx.lineWidth = 1.2;
         for (let i = 0; i < 6; i++) {
-          const ly = topMelanciaStartY + i * stepTop;
+          const lyTop = topMelanciaStartY + i * stepTop;
           ctx.beginPath();
-          ctx.moveTo(ox + 3 * m, ly);
-          ctx.lineTo(ox + width - 3 * m, ly);
+          ctx.moveTo(ox + 3 * m, lyTop);
+          ctx.lineTo(ox + width - 3 * m, lyTop);
           ctx.stroke();
-          // Dotted plants
+          
+          const lyBot = botMelanciaStartY + i * stepBot;
+          ctx.beginPath();
+          ctx.moveTo(ox + 3 * m, lyBot);
+          ctx.lineTo(ox + width - 3 * m, lyBot);
+          ctx.stroke();
+          
           for (let px = ox + 4 * m; px <= ox + width - 4 * m; px += 5 * m) {
             ctx.fillStyle = '#34d399';
-            ctx.fillRect(px - 1.5, ly - 1.5, 3, 3);
+            ctx.fillRect(px - 1.5, lyTop - 1.5, 3, 3);
+            ctx.fillRect(px - 1.5, lyBot - 1.5, 3, 3);
           }
         }
-
-        // D. MELANCIA - 6 Linhas entre Abacaxi e Banana (Abaixo)
-        const botMelanciaStartY = centerAbacaxiY + 5 * m;
-        const botMelanciaEndY = oy + height - 9 * m;
-        const stepBot = (botMelanciaEndY - botMelanciaStartY) / 5;
-        for (let i = 0; i < 6; i++) {
-          const ly = botMelanciaStartY + i * stepBot;
-          ctx.beginPath();
-          ctx.moveTo(ox + 3 * m, ly);
-          ctx.lineTo(ox + width - 3 * m, ly);
-          ctx.stroke();
-          // Dotted plants
-          for (let px = ox + 4 * m; px <= ox + width - 4 * m; px += 5 * m) {
-            ctx.fillStyle = '#34d399';
-            ctx.fillRect(px - 1.5, ly - 1.5, 3, 3);
-          }
-        }
+        
         ctx.fillStyle = '#6ee7b7';
         ctx.font = 'bold 10px Inter, sans-serif';
-        ctx.fillText('Melancia (6 Linhas de 100m - Bloco Superior)', ox + 20 * m, topMelanciaStartY + 2 * m);
-        ctx.fillText('Melancia (6 Linhas de 100m - Bloco Inferior)', ox + 20 * m, botMelanciaStartY + 2 * m);
+        ctx.fillText('Melancia (6 Linhas de 100m)', ox + 20 * m, topMelanciaStartY + 2 * m);
+        ctx.fillText('Melancia (6 Linhas de 100m)', ox + 20 * m, botMelanciaStartY + 2 * m);
       }
-      // 3. IRRIGATION SYSTEM (Mazagão - Apenas Tubulação Principal Frontal Externa)
+
+      // 3. IRRIGATION SYSTEM (Mazagão - Tubulação Principal no Lado de 50m Esquerdo)
       if (showIrrigation) {
-        // Captação Poço + Reservatório no Topo (1.500 Litros)
-        const resX = ox + 15;
+        // Reservatório e Poço Localizado no Canto Superior Esquerdo
+        const resX = ox - 40;
         const resY = oy - 45;
         const resW = 75;
         const resH = 25;
@@ -780,44 +771,57 @@
         ctx.font = 'bold 9px Inter, sans-serif';
         ctx.fillText('POÇO + RESERV.', resX + 3, resY + 11);
         ctx.fillText('1.500 LITROS', resX + 3, resY + 21);
-        interactiveObjects.push({
-          x: resX, y: resY, w: resW, h: resH,
-          title: 'Poço & Reservatório Mazagão',
-          details: [
-            'Capacidade Reservatório: 1.500 Litros',
-            'Distribuição direta por gravidade/pressão',
-            'Atende 1.166 emissores',
-            'Vazão diária: 9.328 Litros/dia'
-          ]
-        });
-        
-        // Tubulação Principal Frontal Externa (sem adutora na área interna)
+
+        // Tubulação Principal em Mazagão: Plotada exclusivamente no lado de 50m do LADO ESQUERDO
+        const mainLineMZ_X = ox;
         ctx.strokeStyle = '#0284c7';
         ctx.lineWidth = 4;
         ctx.beginPath();
         ctx.moveTo(resX + resW / 2, resY + resH);
-        ctx.lineTo(resX + resW / 2, oy);
-        ctx.lineTo(ox, oy);
-        ctx.lineTo(ox + width, oy); // Apenas a tubulação principal na borda externa de 100m
+        ctx.lineTo(mainLineMZ_X, oy);
+        ctx.lineTo(mainLineMZ_X, oy + height);
         ctx.stroke();
-        
-        // Rótulo da Tubulação Principal Frontal em Mazagão
+
         ctx.fillStyle = '#38bdf8';
         ctx.font = 'bold 10px Inter, sans-serif';
-        ctx.fillText('Tubulação Principal Frontal (Borda dos 100m)', ox + width / 2 - 90, oy - 5);
+        ctx.fillText('Tubulação Principal (Borda dos 50m - Esquerda)', ox + 10, oy + 12);
 
-        // Drip lines running horizontally along crops
+        // Linhas de Gotejamento em cada linha de Melancia, Banana e no centro do Abacaxi (Horizontais)
         ctx.strokeStyle = '#38bdf8';
         ctx.lineWidth = 1;
         ctx.setLineDash([3, 3]);
-        for (let y = oy + 3 * m; y <= oy + height - 3 * m; y += 3 * m) {
+        
+        // Gotejamento nas 4 linhas de Banana
+        bananaYTop.concat(bananaYBottom).forEach(by => {
           ctx.beginPath();
-          ctx.moveTo(ox, y);
-          ctx.lineTo(ox + width, y);
+          ctx.moveTo(ox, by);
+          ctx.lineTo(ox + width, by);
+          ctx.stroke();
+        });
+
+        // Gotejamento entre a fila dupla de Abacaxi
+        ctx.beginPath();
+        ctx.moveTo(ox, centerAbacaxiY);
+        ctx.lineTo(ox + width, centerAbacaxiY);
+        ctx.stroke();
+
+        // Gotejamento nas 12 linhas de Melancia
+        for (let i = 0; i < 6; i++) {
+          const lyTop = topMelanciaStartY + i * stepTop;
+          ctx.beginPath();
+          ctx.moveTo(ox, lyTop);
+          ctx.lineTo(ox + width, lyTop);
+          ctx.stroke();
+
+          const lyBot = botMelanciaStartY + i * stepBot;
+          ctx.beginPath();
+          ctx.moveTo(ox, lyBot);
+          ctx.lineTo(ox + width, lyBot);
           ctx.stroke();
         }
         ctx.setLineDash([]);
       }
+
       // 4. DIMENSIONS & COTAS
       if (showDims) {
         drawDimensionLine(ox, oy + height + 15, ox + width, oy + height + 15, '100,00 m');
@@ -825,8 +829,8 @@
       }
       ctx.restore();
     }
+
     // --- HELPER DRAWING FUNCTIONS ---
-    // Draw Plant Icon / Circle
     function drawPlantCircle(x, y, radius, fillColor, strokeColor) {
       ctx.beginPath();
       ctx.arc(x, y, radius, 0, Math.PI * 2);
@@ -836,21 +840,19 @@
       ctx.lineWidth = 1;
       ctx.stroke();
     }
-    // Draw CAD Technical Dimension Line with Arrows & Text
+
     function drawDimensionLine(x1, y1, x2, y2, text) {
       ctx.save();
       ctx.strokeStyle = '#f59e0b';
       ctx.fillStyle = '#fbbf24';
       ctx.lineWidth = 1.2;
       ctx.font = '10px Fira Code, monospace';
-      // Main Dimension Line
       ctx.beginPath();
       ctx.moveTo(x1, y1);
       ctx.lineTo(x2, y2);
       ctx.stroke();
-      // Tick marks / End caps
-      const isHorizontal = Math.abs(y1 - y2) < 2;
       
+      const isHorizontal = Math.abs(y1 - y2) < 2;
       if (isHorizontal) {
         ctx.beginPath();
         ctx.moveTo(x1, y1 - 4); ctx.lineTo(x1, y1 + 4);
@@ -872,9 +874,8 @@
       }
       ctx.restore();
     }
+
     // --- INTERACTIVITY & TOOLTIP HANDLERS ---
-    
-    // Mouse Dragging (Pan) & Click Detection
     canvas.addEventListener('mousedown', (e) => {
       isDragging = true;
       startX = e.clientX - panX;
@@ -889,7 +890,6 @@
         panY = e.clientY - startY;
         drawCanvas();
       } else {
-        // Handle Tooltip Hover Detection
         const rect = canvas.getBoundingClientRect();
         const mouseX = (e.clientX - rect.left - panX) / scale;
         const mouseY = (e.clientY - rect.top - panY) / scale;
@@ -914,13 +914,13 @@
         }
       }
     });
-    // Mouse Wheel Zooming
+
     canvas.addEventListener('wheel', (e) => {
       e.preventDefault();
       const zoomFactor = e.deltaY < 0 ? 1.1 : 0.9;
       zoomCanvas(zoomFactor);
     }, { passive: false });
-    // Touch Support for Mobile Dragging
+
     canvas.addEventListener('touchstart', (e) => {
       if (e.touches.length === 1) {
         isDragging = true;
@@ -938,6 +938,7 @@
     canvas.addEventListener('touchend', () => {
       isDragging = false;
     });
+
     // --- INITIALIZATION ON WINDOW LOAD ---
     window.onload = function() {
       resizeCanvas();
