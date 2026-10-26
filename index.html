@@ -173,7 +173,7 @@
           </div>
           <div class="grid grid-cols-3 gap-2">
             <div class="bg-slate-900 p-2 rounded-lg border border-slate-800 text-center">
-              <span class="text-yellow-400 block font-bold text-lg" id="count-banana">0</span>
+              <span class="text-yellow-400 block font-bold text-lg" id="count-banana">48</span>
               <span class="text-[10px] text-slate-400 block">Bananas</span>
               <span class="text-[9px] text-slate-500 font-mono-code">2,5m × 2,5m</span>
             </div>
@@ -190,7 +190,7 @@
           </div>
           <div class="bg-emerald-950/40 border border-emerald-800/60 rounded-lg p-2.5 flex items-center justify-between">
             <span class="text-slate-300 font-medium">Total de Emissores (Gotejadores):</span>
-            <span id="count-total-emitters" class="font-bold text-emerald-400 text-sm font-mono-code">1.845 un</span>
+            <span id="count-total-emitters" class="font-bold text-emerald-400 text-sm font-mono-code">1.893 un</span>
           </div>
         </div>
         <!-- Hydraulic & Irrigation Calculation Section -->
@@ -206,11 +206,11 @@
             </div>
             <div class="flex justify-between items-center border-b border-slate-800 pb-1.5">
               <span class="text-slate-400">Demanda Diária Total:</span>
-              <span id="panel-daily-flow" class="font-mono-code text-blue-400 font-bold">14.760 Litros/dia</span>
+              <span id="panel-daily-flow" class="font-mono-code text-blue-400 font-bold">15.144 Litros/dia</span>
             </div>
             <div class="flex justify-between items-center border-b border-slate-800 pb-1.5">
               <span class="text-slate-400">Vazão do Sistema (2h de rega):</span>
-              <span class="font-mono-code text-cyan-400 font-bold">7,38 m³/h (2,05 L/s)</span>
+              <span class="font-mono-code text-cyan-400 font-bold">7,57 m³/h (2,10 L/s)</span>
             </div>
             <div class="flex justify-between items-center">
               <span class="text-slate-400">Tubulação Lateral:</span>
@@ -268,7 +268,7 @@
             <div class="flex items-start gap-2">
               <span class="w-2 h-2 rounded-full bg-yellow-400 mt-1 shrink-0"></span>
               <div>
-                <strong class="text-slate-200">Banana:</strong> 2,5m × 2,5m. Densa proteção de borda e alinhamento ajustado.
+                <strong class="text-slate-200">Banana:</strong> 2,5m × 2,5m. Fileiras verticais laterais em Pedra Branca e horizontais em Mazagão.
               </div>
             </div>
             <div class="flex items-start gap-2">
@@ -295,7 +295,6 @@
   </div>
   <!-- JAVASCRIPT LOGIC -->
   <script>
-    // --- APP STATE & ENGINE VARIABLES ---
     let currentArea = 'pedra_branca';
     const canvas = document.getElementById('cadCanvas');
     const ctx = canvas.getContext('2d');
@@ -366,16 +365,16 @@
       if (currentArea === 'pedra_branca') {
         title.innerText = 'Pedra Branca';
         dims.innerText = '83m × 60m (Área total: 4.980 m²)';
-        countBanana.innerText = '0';
+        countBanana.innerText = '48';
         countAbacaxi.innerText = '1.155';
         countMelancia.innerText = '690';
-        countTotal.innerText = '1.845 un';
-        dailyFlow.innerText = '14.760 Litros/dia';
+        countTotal.innerText = '1.893 un';
+        dailyFlow.innerText = '15.144 Litros/dia';
         pumpBox.style.display = 'block';
       } else if (currentArea === 'mazagao') {
         title.innerText = 'Mazagão';
         dims.innerText = '100m × 50m (Área total: 5.000 m²)';
-        countBanana.innerText = '148'; // Removidas as 2 plantas da ponta direita conforme anexo
+        countBanana.innerText = '148';
         countAbacaxi.innerText = '480';
         countMelancia.innerText = '576';
         countTotal.innerText = '1.204 un';
@@ -384,11 +383,11 @@
       } else {
         title.innerText = 'Visão Geral (Comparativa)';
         dims.innerText = 'Pedra Branca (4.980m²) & Mazagão (5.000m²)';
-        countBanana.innerText = '148';
+        countBanana.innerText = '196';
         countAbacaxi.innerText = '1.635';
         countMelancia.innerText = '1.266';
-        countTotal.innerText = '3.049 un';
-        dailyFlow.innerText = '24.392 Litros/dia';
+        countTotal.innerText = '3.097 un';
+        dailyFlow.innerText = '24.776 Litros/dia';
         pumpBox.style.display = 'block';
       }
     }
@@ -452,7 +451,7 @@
     }
     
     // =========================================================================
-    // AREA 1: PEDRA BRANCA (83m x 60m) - Faixas 1 e 3 a 2m das Melancias
+    // AREA 1: PEDRA BRANCA (83m x 60m) - Com fileiras verticais de banana nas laterais
     // =========================================================================
     function drawPedraBrancaArea(ox, oy, m) {
       const width = 83 * m;  
@@ -477,8 +476,8 @@
         title: 'Área Pedra Branca',
         details: [
           'Tamanho: 83m × 60m (4.980 m²)',
-          'Total Plantas: 1.845 unidades',
-          'Vazão Diária: 14.760 Litros/dia',
+          'Total Plantas: 1.893 unidades',
+          'Vazão Diária: 15.144 Litros/dia',
           'Irrigação: Gotejamento local + Reservatório'
         ]
       });
@@ -493,6 +492,16 @@
       const abacaxiYPositions = [abacaxiY1, abacaxiY2, abacaxiY3];
 
       if (showCrops) {
+        // A. BANANAS - Fila vertical em cada lado (24 plantas por lado = 48 total)
+        ctx.fillStyle = '#facc15';
+        const bananaXLeft = ox + 2 * m;
+        const bananaXRight = ox + width - 2 * m;
+        for (let y = 1.25 * m; y <= height - 1.25 * m; y += 2.5 * m) {
+          drawPlantCircle(bananaXLeft, oy + y, 3.5, '#facc15', '#ca8a04');
+          drawPlantCircle(bananaXRight, oy + y, 3.5, '#facc15', '#ca8a04');
+        }
+
+        // B. ABACAXI - 3 Faixas de Fila Dupla (Faixas 1 e 3 a 2m da melancia)
         const abacaxiStartX = ox + 5 * m;
         const abacaxiEndX = ox + width - 5 * m;
         abacaxiYPositions.forEach((yPos, idx) => {
@@ -507,9 +516,10 @@
           
           ctx.fillStyle = '#fdba74';
           ctx.font = '10px Inter, sans-serif';
-          ctx.fillText(`Faixa Abacaxi ${idx + 1} (Fila Dupla - 2m da Melancia)`, abacaxiStartX + 10, yPos - 6);
+          ctx.fillText(`Faixa Abacaxi ${idx + 1} (Fila Dupla - 2m da Melancia)`, abacaxiStartX + 15, yPos - 6);
         });
 
+        // C. MELANCIA - 23 Linhas Horizontais
         ctx.strokeStyle = '#10b981';
         ctx.lineWidth = 1;
         for (let i = 0; i < 23; i++) {
@@ -588,6 +598,12 @@
         ctx.lineWidth = 1;
         ctx.setLineDash([3, 3]);
         
+        for (let y = 1.25 * m; y <= height - 1.25 * m; y += 2.5 * m) {
+          ctx.beginPath();
+          ctx.moveTo(mainLineX, oy + y);
+          ctx.lineTo(ox, oy + y);
+          ctx.stroke();
+        }
         for (let i = 0; i < 23; i++) {
           const ly = melanciaStartY + i * melanciaStepY;
           ctx.beginPath();
@@ -612,7 +628,7 @@
     }
 
     // =========================================================================
-    // AREA 2: MAZAGÃO (100m x 50m) - Com a recuo do canto direito assinalado pelo X vermelho
+    // AREA 2: MAZAGÃO (100m x 50m) - Com recuo à direita conforme imagem de referência
     // =========================================================================
     function drawMazagaoArea(ox, oy, m) {
       const width = 100 * m; 
@@ -655,11 +671,9 @@
       const botMelanciaEndY = oy + height - 8 * m;
       const stepBot = (botMelanciaEndY - botMelanciaStartY) / 5;
 
-      // Limite do recuo no canto direito (conforme X vermelho da imagem)
       const croppedRightX = ox + width - 4 * m;
 
       if (showCrops) {
-        // A. BANANAS - Retirando a última planta da direita onde indicado com X
         ctx.fillStyle = '#facc15';
         bananaYTop.concat(bananaYBottom).forEach((by, lineIdx) => {
           let plantCount = 0;
@@ -670,7 +684,6 @@
             let isTopInner = (lineIdx === 1);
             let isBotInner = (lineIdx === 2);
 
-            // Se for a planta marcada com o X vermelho na extremidade direita superior/inferior ou na linha interna
             if ((isTopOuter || isBotOuter) && plantCount >= 39) {
               continue;
             }
@@ -686,7 +699,6 @@
         ctx.fillText('Banana (2 Linhas Topo - Ajustadas)', ox + width / 2 - 100, oy + 2 * m);
         ctx.fillText('Banana (2 Linhas Base - Ajustadas)', ox + width / 2 - 100, oy + height - 1 * m);
 
-        // B. ABACAXI CENTRAL - Recuado na extremidade direita
         ctx.strokeStyle = '#f97316';
         ctx.lineWidth = 2;
         ctx.beginPath();
@@ -700,7 +712,6 @@
         ctx.font = 'bold 10px Inter, sans-serif';
         ctx.fillText('Abacaxi Central (Fila Dupla)', ox + width / 2 - 60, centerAbacaxiY - 5);
 
-        // C. MELANCIA - Recuadas na extremidade direita
         ctx.strokeStyle = '#10b981';
         ctx.lineWidth = 1.2;
         for (let i = 0; i < 6; i++) {
