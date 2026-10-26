@@ -462,7 +462,7 @@
       ctx.restore();
     }
     // =========================================================================
-    // AREA 1: PEDRA BRANCA (83m x 60m) - Sem linhas de bananeira superior/inferior conforme instrução
+    // AREA 1: PEDRA BRANCA (83m x 60m) - Sem as linhas laterais de banana conforme solicitado
     // =========================================================================
     function drawPedraBrancaArea(ox, oy, m) {
       const width = 83 * m;  // 415px
@@ -494,7 +494,7 @@
           'Irrigação: Gotejamento local + Reservatório'
         ]
       });
-      // 2. CROPS LAYOUT (Abacaxi e Melancia)
+      // 2. CROPS LAYOUT (Abacaxi nas 3 faixas e Melancia)
       const abacaxiYPositions = [oy + 4 * m, oy + height / 2, oy + height - 4 * m];
       const melanciaStartY = oy + 8 * m;
       const melanciaEndY = oy + height - 8 * m;
@@ -632,7 +632,7 @@
       ctx.restore();
     }
     // =========================================================================
-    // AREA 2: MAZAGÃO (100m x 50m) - Com reposicionamento nas extremidades direitas das bananas
+    // AREA 2: MAZAGÃO (100m x 50m) - Com reposicionamento nas extremidades direitas
     // =========================================================================
     function drawMazagaoArea(ox, oy, m) {
       const width = 100 * m; // 500px
@@ -678,7 +678,7 @@
 
       // 2. CROPS LAYOUT
       if (showCrops) {
-        // A. BANANA - Topo e Base (com reposicionamento nas extremidades direitas indicado na imagem)
+        // A. BANANA - Topo e Base (com reposicionamento nas extremidades direitas)
         ctx.fillStyle = '#facc15';
         bananaYTop.concat(bananaYBottom).forEach((by, lineIdx) => {
           let plantCount = 0;
