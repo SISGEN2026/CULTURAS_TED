@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Planta Técnica Agrícola & Sistema de Irrigação - Pedra Branca e Mazagão</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700&display=swap');
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #0f172a;
+      color: #f8fafc;
+    }
+    .font-mono-code {
+      font-family: 'Fira Code', monospace;
+    }
+    canvas {
+      cursor: grab;
+      touch-action: none;
+    }
+    canvas:active {
+      cursor: grabbing;
+    }
+    /* Grid CAD Background Pattern for Panels */
+    .bg-cad-grid {
+      background-color: #1e293b;
+      background-image: linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #475569;
+    }
+  </style>
+</head>
+<body class="h-screen w-screen flex flex-col overflow-hidden bg-slate-900 text-slate-100">
+  <!-- TOP NAVIGATION / HEADER -->
+  <header class="h-14 bg-slate-950 border-b border-slate-800 px-4 flex items-center justify-between z-10 shrink-0">
+    <div class="flex items-center space-x-3">
+      <div class="bg-emerald-500/20 text-emerald-400 p-2 rounded-lg border border-emerald-500/30">
+        <i class="fa-solid fa-compass-drafting text-lg"></i>
+      </div>
+      <div>
+        <h1 class="text-sm md:text-base font-bold tracking-wide text-white flex items-center gap-2">
+          PROJETO TÉCNICO DE AGRONOMIA & IRRIGAÇÃO
+          <span class="text-xs font-normal px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800">CAD 2D Interativo</span>
+        </h1>
+        <p class="text-xs text-slate-400 hidden sm:block">Dimensionamento Agrícola, Hidráulico e Layout de Culturas (Pedra Branca & Mazagão)</p>
+      </div>
+    </div>
+    <!-- Area Switcher Tabs -->
+    <div class="flex items-center bg-slate-900 p-1 rounded-lg border border-slate-800 text-xs font-medium">
+      <button id="btn-pedra-branca" onclick="switchArea('pedra_branca')" 
+              class="px-3 py-1.5 rounded-md transition-all flex items-center gap-2 bg-emerald-600 text-white shadow-sm font-semibold">
+        <i class="fa-solid fa-draw-polygon"></i> Pedra Branca <span class="text-[10px] opacity-80">(83m × 60m)</span>
+      </button>
+      <button id="btn-mazagao" onclick="switchArea('mazagao')" 
+              class="px-3 py-1.5 rounded-md text-slate-400 hover:text-white transition-all flex items-center gap-2">
+        <i class="fa-solid fa-draw-polygon"></i> Mazagão <span class="text-[10px] opacity-80">(100m × 50m)</span>
+      </button>
+      <button id="btn-both" onclick="switchArea('both')" 
+              class="px-3 py-1.5 rounded-md text-slate-400 hover:text-white transition-all flex items-center gap-2 hidden lg:flex">
+        <i class="fa-solid fa-columns"></i> Vista Comparativa Lado a Lado
+      </button>
+    </div>
+    <!-- Quick Tools & Actions -->
+    <div class="flex items-center space-x-2">
+      <button onclick="resetCamera()" title="Resetar Visão" class="p-2 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 text-xs flex items-center gap-1">
+        <i class="fa-solid fa-arrows-to-dot"></i> <span class="hidden md:inline">Resetar Centralização</span>
+      </button>
+      <button onclick="togglePanel()" title="Alternar Painel Lateral" class="p-2 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 text-xs flex items-center gap-1">
+        <i class="fa-solid fa-chart-pie"></i> <span class="hidden md:inline">Painel Técnico</span>
+      </button>
+    </div>
+  </header>
+  <!-- MAIN WORKSPACE CONTAINER -->
+  <div class="flex-1 flex overflow-hidden relative">
+    <!-- CANVAS TOOLBAR / CONTROLS (Floating Overlay) -->
+    <div class="absolute top-4 left-4 z-10 flex flex-col gap-2 bg-slate-950/90 backdrop-blur-md p-2.5 rounded-xl border border-slate-800 shadow-xl text-xs">
+      <div class="font-bold text-slate-400 uppercase tracking-wider text-[10px] mb-1 flex items-center justify-between">
+        <span>Camadas & Filtros</span>
+        <i class="fa-solid fa-layer-group text-slate-500"></i>
+      </div>
+      
+      <label class="flex items-center gap-2 cursor-pointer hover:text-emerald-400 transition-colors py-0.5">
+        <input type="checkbox" id="layer-crops" checked onchange="drawCanvas()" class="rounded bg-slate-800 border-slate-700 text-emerald-500 focus:ring-0">
+        <span class="flex items-center gap-1.5"><i class="fa-solid fa-seedling text-emerald-400"></i> Culturas Agrícolas</span>
+      </label>
+      <label class="flex items-center gap-2 cursor-pointer hover:text-blue-400 transition-colors py-0.5">
+        <input type="checkbox" id="layer-irrigation" checked onchange="drawCanvas()" class="rounded bg-slate-800 border-slate-700 text-blue-500 focus:ring-0">
+        <span class="flex items-center gap-1.5"><i class="fa-solid fa-droplet text-blue-400"></i> Sistema de Irrigação</span>
+      </label>
+      <label class="flex items-center gap-2 cursor-pointer hover:text-amber-400 transition-colors py-0.5">
+        <input type="checkbox" id="layer-dimensions" checked onchange="drawCanvas()" class="rounded bg-slate-800 border-slate-700 text-amber-500 focus:ring-0">
+        <span class="flex items-center gap-1.5"><i class="fa-solid fa-ruler-combined text-amber-400"></i> Cotas & Espaçamentos</span>
+      </label>
+      <label class="flex items-center gap-2 cursor-pointer hover:text-purple-400 transition-colors py-0.5">
+        <input type="checkbox" id="layer-grid" checked onchange="drawCanvas()" class="rounded bg-slate-800 border-slate-700 text-purple-500 focus:ring-0">
+        <span class="flex items-center gap-1.5"><i class="fa-solid fa-border-all text-slate-400"></i> Grade Milimetrada CAD</span>
+      </label>
+      <hr class="border-slate-800 my-1">
+      <!-- Zoom Controls -->
+      <div class="flex items-center justify-between gap-1 pt-1">
+        <button onclick="zoomCanvas(1.2)" class="flex-1 bg-slate-800 hover:bg-slate-700 p-1.5 rounded text-center font-bold text-slate-200" title="Aumentar Zoom">+</button>
+        <button onclick="zoomCanvas(0.8)" class="flex-1 bg-slate-800 hover:bg-slate-700 p-1.5 rounded text-center font-bold text-slate-200" title="Diminuir Zoom">-</button>
+        <button onclick="resetCamera()" class="flex-1 bg-slate-800 hover:bg-slate-700 p-1.5 rounded text-center text-[10px] text-slate-300">1:1</button>
+      </div>
+    </div>
+    <!-- LEGEND OVERLAY (Bottom Left) -->
+    <div class="absolute bottom-4 left-4 z-10 bg-slate-950/90 backdrop-blur-md p-3 rounded-xl border border-slate-800 shadow-xl text-xs max-w-xs hidden sm:block">
+      <div class="font-bold text-slate-300 mb-2 border-b border-slate-800 pb-1 flex justify-between items-center">
+        <span>Legenda Técnica</span>
+        <i class="fa-solid fa-list-check text-slate-500"></i>
+      </div>
+      <div class="grid grid-cols-2 gap-x-3 gap-y-1.5 text-[11px]">
+        <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-yellow-400 inline-block border border-yellow-600"></span> Banana (3m × 3m)</div>
+        <div class="flex items-center gap-2"><span class="w-3 h-3 rounded bg-amber-500 inline-block border border-amber-700"></span> Abacaxi (Fil. Dupla)</div>
+        <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-emerald-500 inline-block border border-emerald-700"></span> Melancia (2.5m × 2m)</div>
+        <div class="flex items-center gap-2"><span class="w-3 h-1 bg-blue-500 inline-block"></span> Tubulação Principal</div>
+        <div class="flex items-center gap-2"><span class="w-3 h-0.5 bg-cyan-400 border-t border-dashed border-cyan-400 inline-block"></span> Linha Gotejamento</div>
+        <div class="flex items-center gap-2"><span class="w-3 h-1 bg-red-500 inline-block"></span> Adutora Captação (300m)</div>
+        <div class="flex items-center gap-2"><span class="w-3 h-3 bg-cyan-600 border border-cyan-300 rounded-sm inline-block"></span> Reservatório D'Água (1.500L)</div>
+        <div class="flex items-center gap-2"><span class="w-3 h-3 bg-red-600 border border-red-300 rounded-sm inline-block"></span> Bomba 2CV / Poço Captação</div>
+      </div>
+    </div>
+    <!-- CANVAS GRAPHICS CONTAINER -->
+    <div id="canvas-container" class="flex-1 h-full w-full relative bg-slate-950 overflow-hidden">
+      <canvas id="cadCanvas" class="w-full h-full block"></canvas>
+      
+      <!-- Interactive Tooltip Overlay -->
+      <div id="tooltip" class="absolute hidden pointer-events-none z-30 bg-slate-900/95 text-slate-100 p-3 rounded-lg border border-emerald-500/50 shadow-2xl text-xs backdrop-blur-md max-w-xs transition-all duration-75">
+        <div id="tooltip-title" class="font-bold text-emerald-400 border-b border-slate-700 pb-1 mb-1 text-sm flex items-center justify-between"></div>
+        <div id="tooltip-content" class="space-y-1 text-slate-300"></div>
+      </div>
+    </div>
+    <!-- RIGHT SIDEBAR: TECHNICAL CALCULATIONS & METRICS -->
+    <aside id="side-panel" class="w-80 sm:w-96 bg-slate-950 border-l border-slate-800 flex flex-col h-full z-20 shadow-2xl transition-all duration-300 shrink-0">
+      
+      <!-- Panel Header -->
+      <div class="p-3 border-b border-slate-800 bg-slate-900 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-calculator text-emerald-400"></i>
+          <h2 class="font-bold text-sm text-slate-200">Memorial de Cálculos & Dados</h2>
+        </div>
+        <button onclick="togglePanel()" class="text-slate-400 hover:text-white p-1">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <!-- Panel Content (Scrollable) -->
+      <div class="flex-1 overflow-y-auto p-4 space-y-4 text-xs font-sans">
+        <!-- Selected Area Summary -->
+        <div class="bg-slate-900/80 rounded-xl p-3 border border-slate-800">
+          <div class="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1 flex items-center gap-1">
+            <i class="fa-solid fa-location-dot text-amber-400"></i> Área em Destaque
+          </div>
+          <div id="panel-area-title" class="text-base font-bold text-white mb-1">Pedra Branca</div>
+          <div id="panel-area-dims" class="text-slate-400 font-mono-code text-[11px]">83m × 60m (Área total: 4.980 m²)</div>
+        </div>
+        <!-- Plant Count Metrics -->
+        <div class="space-y-2">
+          <div class="text-[10px] font-bold uppercase tracking-wider text-slate-400 flex justify-between items-center">
+            <span>Quantitativo de Plantas</span>
+            <i class="fa-solid fa-seedling text-emerald-400"></i>
+          </div>
+          <div class="grid grid-cols-3 gap-2">
+            <div class="bg-slate-900 p-2 rounded-lg border border-slate-800 text-center">
+              <span class="text-yellow-400 block font-bold text-lg" id="count-banana">40</span>
+              <span class="text-[10px] text-slate-400 block">Bananas</span>
+              <span class="text-[9px] text-slate-500 font-mono-code">3m × 3m</span>
+            </div>
+            <div class="bg-slate-900 p-2 rounded-lg border border-slate-800 text-center">
+              <span class="text-amber-400 block font-bold text-lg" id="count-abacaxi">1.155</span>
+              <span class="text-[10px] text-slate-400 block">Abacaxis</span>
+              <span class="text-[9px] text-slate-500 font-mono-code">Fil. Dupla</span>
+            </div>
+            <div class="bg-slate-900 p-2 rounded-lg border border-slate-800 text-center">
+              <span class="text-emerald-400 block font-bold text-lg" id="count-melancia">690</span>
+              <span class="text-[10px] text-slate-400 block">Melancias</span>
+              <span class="text-[9px] text-slate-500 font-mono-code">2.5m × 2m</span>
+            </div>
+          </div>
+          <div class="bg-emerald-950/40 border border-emerald-800/60 rounded-lg p-2.5 flex items-center justify-between">
+            <span class="text-slate-300 font-medium">Total de Emissores (Gotejadores):</span>
+            <span id="count-total-emitters" class="font-bold text-emerald-400 text-sm font-mono-code">1.885 un</span>
+          </div>
+        </div>
+        <!-- Hydraulic & Irrigation Calculation Section -->
+        <div class="space-y-2">
+          <div class="text-[10px] font-bold uppercase tracking-wider text-slate-400 flex justify-between items-center">
+            <span>Dimensionamento Hidráulico</span>
+            <i class="fa-solid fa-faucet-drip text-blue-400"></i>
+          </div>
+          <div class="bg-slate-900 rounded-xl p-3 border border-slate-800 space-y-2">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-1.5">
+              <span class="text-slate-400">Vazão por Emissor:</span>
+              <span class="font-mono-code text-slate-200 font-semibold">8,0 L/dia (4 L/h nominal)</span>
+            </div>
+            <div class="flex justify-between items-center border-b border-slate-800 pb-1.5">
+              <span class="text-slate-400">Demanda Diária Total:</span>
+              <span id="panel-daily-flow" class="font-mono-code text-blue-400 font-bold">15.080 Litros/dia</span>
+            </div>
+            <div class="flex justify-between items-center border-b border-slate-800 pb-1.5">
+              <span class="text-slate-400">Vazão do Sistema (2h de rega):</span>
+              <span class="font-mono-code text-cyan-400 font-bold">7,54 m³/h (2,10 L/s)</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-slate-400">Tubulação Lateral:</span>
+              <span class="font-mono-code text-slate-300">PELBD Ø 16mm</span>
+            </div>
+          </div>
+        </div>
+        <!-- Pump Power Calculation Box (Pedra Branca Detail) -->
+        <div id="pump-calculation-box" class="space-y-2">
+          <div class="text-[10px] font-bold uppercase tracking-wider text-slate-400 flex justify-between items-center">
+            <span>Cálculo da Bomba (Pedra Branca)</span>
+            <i class="fa-solid fa-bolt text-amber-400"></i>
+          </div>
+          <div class="bg-slate-900 rounded-xl p-3 border border-slate-800 space-y-2 font-mono-code text-[11px]">
+            <div class="text-slate-300 font-sans font-bold text-xs text-amber-400 border-b border-slate-800 pb-1">
+              Captação Externa → Reservatório (1.500L)
+            </div>
+            
+            <div class="grid grid-cols-2 gap-1 text-[10px]">
+              <div class="text-slate-400">Distância L: <span class="text-white">300 m</span></div>
+              <div class="text-slate-400">Altura Geom. (hg): <span class="text-white">6,0 m</span></div>
+              <div class="text-slate-400">Diâmetro Tubo: <span class="text-white">DN 50mm</span></div>
+              <div class="text-slate-400">Perda Carga (hf): <span class="text-white">~6,6 m.c.a.</span></div>
+            </div>
+            <div class="bg-slate-950 p-2 rounded border border-slate-800 space-y-1">
+              <div class="flex justify-between text-slate-300">
+                <span>H. Métrica Total (Hmt):</span>
+                <span class="text-amber-400 font-bold">13,26 m.c.a.</span>
+              </div>
+              <div class="flex justify-between text-slate-300">
+                <span>Rendimento Conjunto (η):</span>
+                <span class="text-slate-200">60% (0,60)</span>
+              </div>
+              <div class="text-[10px] text-slate-500 pt-1 border-t border-slate-800">
+                P(cv) = (1000 × Q × Hmt) / (75 × η)
+              </div>
+              <div class="flex justify-between text-slate-200 font-bold pt-1">
+                <span>Potência Definida:</span>
+                <span class="text-emerald-400">2,0 cv</span>
+              </div>
+            </div>
+            <div class="bg-emerald-950/60 border border-emerald-700/80 p-2 rounded text-emerald-300 font-sans text-[11px] font-semibold flex items-center gap-2">
+              <i class="fa-solid fa-circle-check text-emerald-400 text-sm"></i>
+              <span>Bomba Adotada: 2,0 cv (Alta Performance)</span>
+            </div>
+          </div>
+        </div>
+        <!-- Spacing & Agronomic Info -->
+        <div class="space-y-2">
+          <div class="text-[10px] font-bold uppercase tracking-wider text-slate-400 flex justify-between items-center">
+            <span>Ficha Agronômica dos Espaçamentos</span>
+            <i class="fa-solid fa-book-open text-purple-400"></i>
+          </div>
+          <div class="bg-slate-900 rounded-xl p-2.5 border border-slate-800 text-[11px] space-y-1.5">
+            <div class="flex items-start gap-2">
+              <span class="w-2 h-2 rounded-full bg-yellow-400 mt-1 shrink-0"></span>
+              <div>
+                <strong class="text-slate-200">Banana:</strong> 3,0m entre linhas × 3,0m entre plantas. Densa proteção de borda contra ventos.
+              </div>
+            </div>
+            <div class="flex items-start gap-2">
+              <span class="w-2 h-2 rounded-full bg-amber-500 mt-1 shrink-0"></span>
+              <div>
+                <strong class="text-slate-200">Abacaxi:</strong> Fileiras Duplas. 1,2m entre filas duplas, 0,4m entre linhas internas e 0,4m entre plantas.
+              </div>
+            </div>
+            <div class="flex items-start gap-2">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 mt-1 shrink-0"></span>
+              <div>
+                <strong class="text-slate-200">Melancia:</strong> 2,5m entre linhas × 2,0m entre plantas. Cobertura rasteira de alta eficiência.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Panel Footer -->
+      <div class="p-3 bg-slate-900 border-t border-slate-800 text-[10px] text-slate-500 flex justify-between items-center">
+        <span>Engenharia Agronômica CAD</span>
+        <span>Escala Dinâmica 1:100</span>
+      </div>
+    </aside>
+  </div>
+  <!-- JAVASCRIPT LOGIC -->
+  <script>
+    // --- APP STATE & ENGINE VARIABLES ---
+    let currentArea = 'pedra_branca'; // 'pedra_branca', 'mazagao', 'both'
+    const canvas = document.getElementById('cadCanvas');
+    const ctx = canvas.getContext('2d');
+    const container = document.getElementById('canvas-container');
+    // Camera Transform State (Pan & Zoom)
+    let scale = 1.0;
+    let panX = 0;
+    let panY = 0;
+    let isDragging = false;
+    let startX = 0;
+    let startY = 0;
+    // Hover / Interactive Object Store
+    let interactiveObjects = [];
+    let hoveredObject = null;
+    // Window Resize Handler
+    function resizeCanvas() {
+      canvas.width = container.clientWidth;
+      canvas.height = container.clientHeight;
+      drawCanvas();
+    }
+    window.addEventListener('resize', resizeCanvas);
+    // Initial Camera Reset
+    function resetCamera() {
+      scale = 1.0;
+      if (currentArea === 'both') {
+        panX = canvas.width / 2 - 350;
+        panY = canvas.height / 2 - 150;
+      } else {
+        panX = canvas.width / 2 - 200;
+        panY = canvas.height / 2 - 150;
+      }
+      drawCanvas();
+    }
+    // Area Switching Function
+    function switchArea(area) {
+      currentArea = area;
+      // Update UI Tabs
+      document.getElementById('btn-pedra-branca').className = area === 'pedra_branca' 
+        ? 'px-3 py-1.5 rounded-md transition-all flex items-center gap-2 bg-emerald-600 text-white shadow-sm font-semibold' 
+        : 'px-3 py-1.5 rounded-md text-slate-400 hover:text-white transition-all flex items-center gap-2';
+      
+      document.getElementById('btn-mazagao').className = area === 'mazagao' 
+        ? 'px-3 py-1.5 rounded-md transition-all flex items-center gap-2 bg-emerald-600 text-white shadow-sm font-semibold' 
+        : 'px-3 py-1.5 rounded-md text-slate-400 hover:text-white transition-all flex items-center gap-2';
+      
+      document.getElementById('btn-both').className = area === 'both' 
+        ? 'px-3 py-1.5 rounded-md transition-all flex items-center gap-2 bg-emerald-600 text-white shadow-sm font-semibold hidden lg:flex' 
+        : 'px-3 py-1.5 rounded-md text-slate-400 hover:text-white transition-all flex items-center gap-2 hidden lg:flex';
+      // Update Panel Info
+      updatePanelData();
+      resetCamera();
+    }
+    // Toggle Sidebar Panel
+    function togglePanel() {
+      const panel = document.getElementById('side-panel');
+      panel.classList.toggle('hidden');
+      setTimeout(resizeCanvas, 300);
+    }
+    // Update Panel Data based on active tab
+    function updatePanelData() {
+      const title = document.getElementById('panel-area-title');
+      const dims = document.getElementById('panel-area-dims');
+      const countBanana = document.getElementById('count-banana');
+      const countAbacaxi = document.getElementById('count-abacaxi');
+      const countMelancia = document.getElementById('count-melancia');
+      const countTotal = document.getElementById('count-total-emitters');
+      const dailyFlow = document.getElementById('panel-daily-flow');
+      const pumpBox = document.getElementById('pump-calculation-box');
+      if (currentArea === 'pedra_branca') {
+        title.innerText = 'Pedra Branca';
+        dims.innerText = '83m × 60m (Área total: 4.980 m²)';
+        countBanana.innerText = '40';
+        countAbacaxi.innerText = '1.155';
+        countMelancia.innerText = '690';
+        countTotal.innerText = '1.885 un';
+        dailyFlow.innerText = '15.080 Litros/dia';
+        pumpBox.style.display = 'block';
+      } else if (currentArea === 'mazagao') {
+        title.innerText = 'Mazagão';
+        dims.innerText = '100m × 50m (Área total: 5.000 m²)';
+        countBanana.innerText = '66';
+        countAbacaxi.innerText = '500';
+        countMelancia.innerText = '600';
+        countTotal.innerText = '1.166 un';
+        dailyFlow.innerText = '9.328 Litros/dia';
+        pumpBox.style.display = 'none';
+      } else {
+        title.innerText = 'Visão Geral (Comparativa)';
+        dims.innerText = 'Pedra Branca (4.980m²) & Mazagão (5.000m²)';
+        countBanana.innerText = '106';
+        countAbacaxi.innerText = '1.655';
+        countMelancia.innerText = '1.290';
+        countTotal.innerText = '3.051 un';
+        dailyFlow.innerText = '24.408 Litros/dia';
+        pumpBox.style.display = 'block';
+      }
+    }
+    // Zoom Function
+    function zoomCanvas(factor) {
+      scale *= factor;
+      scale = Math.max(0.4, Math.min( scale, 3.5 )); // Bound zoom
+      drawCanvas();
+    }
+    // --- MAIN DRAWING RENDER LOOP ---
+    function drawCanvas() {
+      // Clear interactive collision array
+      interactiveObjects = [];
+      // Clear background
+      ctx.save();
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.fillStyle = '#090d16';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.restore();
+      // Apply Pan and Zoom Transforms
+      ctx.save();
+      ctx.translate(panX, panY);
+      ctx.scale(scale, scale);
+      // 1. Draw Grid
+      if (document.getElementById('layer-grid').checked) {
+        drawCADGrid();
+      }
+      // SCALE METRICS: 1 meter = 5.0 pixels
+      const meterScale = 5.0;
+      if (currentArea === 'pedra_branca') {
+        drawPedraBrancaArea(0, 0, meterScale);
+      } else if (currentArea === 'mazagao') {
+        drawMazagaoArea(0, 0, meterScale);
+      } else {
+        // Draw Both Side by Side
+        drawPedraBrancaArea(0, 0, meterScale);
+        drawMazagaoArea(550, 0, meterScale);
+      }
+      ctx.restore();
+    }
+    // --- CAD GRID BACKGROUND ---
+    function drawCADGrid() {
+      ctx.save();
+      ctx.strokeStyle = '#1e293b';
+      ctx.lineWidth = 0.5;
+      const gridSize = 25; // 5 meters
+      const startX = -1000;
+      const endX = 2000;
+      const startY = -1000;
+      const endY = 2000;
+      for (let x = startX; x < endX; x += gridSize) {
+        ctx.beginPath();
+        ctx.moveTo(x, startY);
+        ctx.lineTo(x, endY);
+        ctx.stroke();
+      }
+      for (let y = startY; y < endY; y += gridSize) {
+        ctx.beginPath();
+        ctx.moveTo(startX, y);
+        ctx.lineTo(endX, y);
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+    // =========================================================================
+    // AREA 1: PEDRA BRANCA (83m x 60m)
+    // =========================================================================
+    function drawPedraBrancaArea(ox, oy, m) {
+      const width = 83 * m;  // 415px
+      const height = 60 * m; // 300px
+      const showCrops = document.getElementById('layer-crops').checked;
+      const showIrrigation = document.getElementById('layer-irrigation').checked;
+      const showDims = document.getElementById('layer-dimensions').checked;
+      // 1. Land Perimeter Outline
+      ctx.save();
+      ctx.fillStyle = '#0f172a';
+      ctx.fillRect(ox, oy, width, height);
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 3;
+      ctx.strokeRect(ox, oy, width, height);
+      // Add Area Title Label
+      ctx.fillStyle = '#f8fafc';
+      ctx.font = 'bold 16px Inter, sans-serif';
+      ctx.fillText('PEDRA BRANCA', ox + 15, oy - 15);
+      ctx.font = '12px Inter, sans-serif';
+      ctx.fillStyle = '#94a3b8';
+      ctx.fillText('Dimensões: 83m × 60m (4.980 m²)', ox + 155, oy - 15);
+      // Register area region for hover
+      interactiveObjects.push({
+        x: ox, y: oy, w: width, h: height,
+        title: 'Área Pedra Branca',
+        details: [
+          'Tamanho: 83m × 60m (4.980 m²)',
+          'Total Plantas: 1.885 unidades',
+          'Vazão Diária: 15.080 Litros/dia',
+          'Irrigação: Gotejamento local + Reservatório'
+        ]
+      });
+      // 2. CROPS LAYOUT
+      if (showCrops) {
+        // A. BANANA - Left & Right Margins (3m x 3m spacing)
+        const bananaMarginLeftX = ox + 1.5 * m;
+        const bananaMarginRightX = ox + width - 1.5 * m;
+        ctx.fillStyle = '#facc15';
+        for (let y = 1.5 * m; y < height; y += 3 * m) {
+          // Left Line (20 plants)
+          drawPlantCircle(bananaMarginLeftX, oy + y, 4, '#facc15', '#ca8a04');
+          // Right Line (20 plants)
+          drawPlantCircle(bananaMarginRightX, oy + y, 4, '#facc15', '#ca8a04');
+        }
+        // B. ABACAXI - 3 Double Row Bands (Top, Middle, Bottom)
+        const abacaxiStartX = ox + 5 * m;
+        const abacaxiEndX = ox + width - 5 * m;
+        const abacaxiYPositions = [oy + 4 * m, oy + height / 2, oy + height - 4 * m];
+        abacaxiYPositions.forEach((yPos, idx) => {
+          // Double Rows (0.4m spacing between rows)
+          ctx.strokeStyle = '#f97316';
+          ctx.lineWidth = 2;
+          
+          // Line 1 of Double Row
+          ctx.beginPath();
+          ctx.moveTo(abacaxiStartX, yPos - 1.5);
+          ctx.lineTo(abacaxiEndX, yPos - 1.5);
+          ctx.stroke();
+          // Line 2 of Double Row
+          ctx.beginPath();
+          ctx.moveTo(abacaxiStartX, yPos + 1.5);
+          ctx.lineTo(abacaxiEndX, yPos + 1.5);
+          ctx.stroke();
+          // Label for Pineapple Strip
+          ctx.fillStyle = '#fdba74';
+          ctx.font = '10px Inter, sans-serif';
+          ctx.fillText(`Faixa Abacaxi ${idx + 1} (Fila Dupla)`, abacaxiStartX + 10, yPos - 6);
+        });
+        // C. MELANCIA - Center Block (23 lines of 60m horizontal/vertical layout)
+        const melanciaStartY = oy + 8 * m;
+        const melanciaEndY = oy + height - 8 * m;
+        const melanciaSpaceX = (width - 12 * m) / 23;
+        ctx.strokeStyle = '#10b981';
+        ctx.lineWidth = 1;
+        for (let i = 0; i < 23; i++) {
+          const lx = ox + 6 * m + i * melanciaSpaceX;
+          ctx.beginPath();
+          ctx.moveTo(lx, melanciaStartY);
+          ctx.lineTo(lx, melanciaEndY);
+          ctx.stroke();
+          // Draw dotted plants along watermelon lines
+          for (let py = melanciaStartY; py <= melanciaEndY; py += 4 * m) {
+            ctx.fillStyle = '#34d399';
+            ctx.fillRect(lx - 1.5, py - 1.5, 3, 3);
+          }
+        }
+        // Central Melancia Label
+        ctx.fillStyle = '#6ee7b7';
+        ctx.font = 'bold 12px Inter, sans-serif';
+        ctx.fillText('MELANCIA (23 Linhas de 60m - 690 Plantas)', ox + width / 2 - 130, oy + height / 2 + 25);
+      }
+      // 3. IRRIGATION SYSTEM
+      if (showIrrigation) {
+        // A. Reservoir (Top Right of Area - Capacidade: 1.500 Litros)
+        const resX = ox + width - 35;
+        const resY = oy - 45;
+        const resW = 35;
+        const resH = 25;
+        ctx.fillStyle = '#0284c7';
+        ctx.fillRect(resX, resY, resW, resH);
+        ctx.strokeStyle = '#38bdf8';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(resX, resY, resW, resH);
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 9px Inter, sans-serif';
+        ctx.fillText('RESERV.', resX + 2, resY + 12);
+        ctx.fillText('1.500L', resX + 2, resY + 22);
+        interactiveObjects.push({
+          x: resX, y: resY, w: resW, h: resH,
+          title: 'Reservatório Elevado (Pedra Branca)',
+          details: [
+            'Capacidade: 1,5 m³ (1.500 Litros)',
+            'Altura de Elevação local: 6 metros',
+            'Abastecimento: Adutora de 300m',
+            'Saída: Tubulação principal DN 50mm'
+          ]
+        });
+        // B. External Well Pump & 300m Pipeline (Bomba 2CV com contorno externo sem passar por cima da área)
+        const pumpX = ox + width + 100; // Visualização da distância de 300m
+        const pumpY = oy + height + 60;
+        
+        // Desenho da Adutora (Linha Vermelha de 300m contornando a área externamente)
+        ctx.strokeStyle = '#ef4444';
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.moveTo(pumpX, pumpY);
+        ctx.lineTo(ox + width + 25, pumpY);
+        ctx.lineTo(ox + width + 25, oy - 32);
+        ctx.lineTo(resX + resW / 2, oy - 32);
+        ctx.lineTo(resX + resW / 2, resY + resH);
+        ctx.stroke();
+        
+        // Pipeline Distance Label
+        ctx.fillStyle = '#f87171';
+        ctx.font = 'bold 11px Inter, sans-serif';
+        ctx.fillText('Adutora de Captação Externa (300m - Contorno Externo, Elevação +6m)', ox + 20, oy + height + 40);
+        
+        // Icone da Bomba 2CV
+        ctx.fillStyle = '#dc2626';
+        ctx.fillRect(pumpX - 12, pumpY - 12, 24, 24);
+        ctx.strokeStyle = '#fca5a5';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(pumpX - 12, pumpY - 12, 24, 24);
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 10px Inter, sans-serif';
+        ctx.fillText('BOMBA', pumpX - 18, pumpY + 24);
+        ctx.fillText('2,0 CV', pumpX - 12, pumpY + 36);
+        interactiveObjects.push({
+          x: pumpX - 15, y: pumpY - 15, w: 30, h: 30,
+          title: 'Captação Poço & Motobomba PB',
+          details: [
+            'Potência Adotada: 2,0 CV (Alta Performance)',
+            'Distância do Reservatório: 300 metros',
+            'Altura Manométrica (Hmt): 13,26 m.c.a.',
+            'Caminho: Percurso Externo (Fora da área cultivada)'
+          ]
+        });
+        
+        // C. Internal Irrigation Pipes (Tubulação Principal Frontal e Linhas Laterais de Gotejamento)
+        // Tubulação Principal (Azul) instalada apenas na borda/frente lateral (lado dos 60m/83m)
+        ctx.strokeStyle = '#0284c7';
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.moveTo(resX + resW / 2, resY + resH);
+        ctx.lineTo(resX + resW / 2, oy);
+        ctx.lineTo(ox, oy); // Linha principal frontal
+        ctx.lineTo(ox, oy + height); // Exclusivamente na borda lateral frontal
+        ctx.stroke();
+        
+        // Rótulo da Tubulação Principal Frontal
+        ctx.fillStyle = '#38bdf8';
+        ctx.font = 'bold 10px Inter, sans-serif';
+        ctx.fillText('Tubulação Principal Frontal (Borda do Terreno)', ox + 10, oy + 12);
+
+        // Drip Lateral Lines (Cyan Light Dashed Lines)
+        ctx.strokeStyle = '#38bdf8';
+        ctx.lineWidth = 1;
+        ctx.setLineDash([3, 3]);
+        // Drip lines over crops alimentadas a partir da tubulação principal na borda
+        for (let y = oy + 4 * m; y < oy + height; y += 6 * m) {
+          ctx.beginPath();
+          ctx.moveTo(ox, y);
+          ctx.lineTo(ox + width - 5 * m, y);
+          ctx.stroke();
+        }
+        ctx.setLineDash([]); // Reset dash
+      }
+      // 4. DIMENSIONS & COTAS
+      if (showDims) {
+        drawDimensionLine(ox, oy + height + 15, ox + width, oy + height + 15, '83,00 m');
+        drawDimensionLine(ox - 15, oy, ox - 15, oy + height, '60,00 m');
+      }
+      ctx.restore();
+    }
+    // =========================================================================
+    // AREA 2: MAZAGÃO (100m x 50m)
+    // =========================================================================
+    function drawMazagaoArea(ox, oy, m) {
+      const width = 100 * m; // 500px
+      const height = 50 * m; // 250px
+      const showCrops = document.getElementById('layer-crops').checked;
+      const showIrrigation = document.getElementById('layer-irrigation').checked;
+      const showDims = document.getElementById('layer-dimensions').checked;
+      // 1. Land Perimeter Outline
+      ctx.save();
+      ctx.fillStyle = '#0f172a';
+      ctx.fillRect(ox, oy, width, height);
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 3;
+      ctx.strokeRect(ox, oy, width, height);
+      // Add Area Title Label
+      ctx.fillStyle = '#f8fafc';
+      ctx.font = 'bold 16px Inter, sans-serif';
+      ctx.fillText('MAZAGÃO', ox + 15, oy - 15);
+      ctx.font = '12px Inter, sans-serif';
+      ctx.fillStyle = '#94a3b8';
+      ctx.fillText('Dimensões: 100m × 50m (5.000 m²)', ox + 110, oy - 15);
+      interactiveObjects.push({
+        x: ox, y: oy, w: width, h: height,
+        title: 'Área Mazagão',
+        details: [
+          'Tamanho: 100m × 50m (5.000 m²)',
+          'Total Plantas: 1.166 unidades',
+          'Vazão Diária: 9.328 Litros/dia',
+          'Irrigação: Captação com Poço + Reservatório Integrado (1.500L)'
+        ]
+      });
+      // 2. CROPS LAYOUT
+      if (showCrops) {
+        // A. BANANA - Left & Right Edge Lines (100m long, 3m spacing = 33 plants each)
+        const bananaLeftX = ox + 1.5 * m;
+        const bananaRightX = ox + width - 1.5 * m;
+        for (let y = 1.5 * m; y < height; y += 3 * m) {
+          drawPlantCircle(bananaLeftX, oy + y, 4, '#facc15', '#ca8a04');
+          drawPlantCircle(bananaRightX, oy + y, 4, '#facc15', '#ca8a04');
+        }
+        // B. MELANCIA LEFT BLOCK (6 lines of 100m)
+        const leftMelanciaStartX = ox + 6 * m;
+        const leftMelanciaEndX = ox + width / 2 - 10 * m;
+        const spaceLeft = (leftMelanciaEndX - leftMelanciaStartX) / 6;
+        ctx.strokeStyle = '#10b981';
+        ctx.lineWidth = 1.5;
+        for (let i = 0; i < 6; i++) {
+          const lx = leftMelanciaStartX + i * spaceLeft;
+          ctx.beginPath();
+          ctx.moveTo(lx, oy + 2 * m);
+          ctx.lineTo(lx, oy + height - 2 * m);
+          ctx.stroke();
+        }
+        ctx.fillStyle = '#34d399';
+        ctx.font = 'bold 10px Inter, sans-serif';
+        ctx.fillText('Melancia (6 Linhas de 100m)', leftMelanciaStartX, oy + height / 2 - 10);
+        // C. ABACAXI CENTRAL STRIP (1 Double Row Band along 100m)
+        const centerAbacaxiX = ox + width / 2;
+        ctx.strokeStyle = '#f97316';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(centerAbacaxiX - 2, oy + 2 * m);
+        ctx.lineTo(centerAbacaxiX - 2, oy + height - 2 * m);
+        ctx.moveTo(centerAbacaxiX + 2, oy + 2 * m);
+        ctx.lineTo(centerAbacaxiX + 2, oy + height - 2 * m);
+        ctx.stroke();
+        ctx.fillStyle = '#fdba74';
+        ctx.font = 'bold 10px Inter, sans-serif';
+        ctx.fillText('Abacaxi Central (500 un)', centerAbacaxiX - 35, oy + height / 2 + 25);
+        // D. MELANCIA RIGHT BLOCK (6 lines of 100m)
+        const rightMelanciaStartX = ox + width / 2 + 10 * m;
+        const rightMelanciaEndX = ox + width - 6 * m;
+        const spaceRight = (rightMelanciaEndX - rightMelanciaStartX) / 6;
+        for (let i = 0; i < 6; i++) {
+          const rx = rightMelanciaStartX + i * spaceRight;
+          ctx.beginPath();
+          ctx.moveTo(rx, oy + 2 * m);
+          ctx.lineTo(rx, oy + height - 2 * m);
+          ctx.stroke();
+        }
+        ctx.fillStyle = '#34d399';
+        ctx.font = 'bold 10px Inter, sans-serif';
+        ctx.fillText('Melancia (6 Linhas de 100m)', rightMelanciaStartX, oy + height / 2 - 10);
+      }
+      // 3. IRRIGATION SYSTEM (Mazagão)
+      if (showIrrigation) {
+        // Captação Poço + Reservatório no Topo (1.500 Litros)
+        const resX = ox + 15;
+        const resY = oy - 45;
+        const resW = 75;
+        const resH = 25;
+        ctx.fillStyle = '#0284c7';
+        ctx.fillRect(resX, resY, resW, resH);
+        ctx.strokeStyle = '#38bdf8';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(resX, resY, resW, resH);
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 9px Inter, sans-serif';
+        ctx.fillText('POÇO + RESERV.', resX + 3, resY + 11);
+        ctx.fillText('1.500 LITROS', resX + 3, resY + 21);
+        interactiveObjects.push({
+          x: resX, y: resY, w: resW, h: resH,
+          title: 'Poço & Reservatório Mazagão',
+          details: [
+            'Capacidade Reservatório: 1.500 Litros',
+            'Distribuição direta por gravidade/pressão',
+            'Atende 1.166 emissores',
+            'Vazão diária: 9.328 Litros/dia'
+          ]
+        });
+        
+        // Tubulação Principal Frontal disposta a apenas um dos lados dos 100m (Borda frontal superior)
+        ctx.strokeStyle = '#0284c7';
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.moveTo(resX + resW / 2, resY + resH);
+        ctx.lineTo(resX + resW / 2, oy);
+        ctx.lineTo(ox, oy);
+        ctx.lineTo(ox + width, oy); // Tubulação principal frontal ao longo da borda de 100m
+        ctx.stroke();
+        
+        // Rótulo da Tubulação Principal Frontal em Mazagão
+        ctx.fillStyle = '#38bdf8';
+        ctx.font = 'bold 10px Inter, sans-serif';
+        ctx.fillText('Tubulação Principal Frontal (Borda de 100m)', ox + width / 2 - 90, oy + 12);
+
+        // Drip lines running vertically along crops alimentadas a partir do tubo principal na borda
+        ctx.strokeStyle = '#38bdf8';
+        ctx.lineWidth = 1;
+        ctx.setLineDash([3, 3]);
+        for (let x = ox + 6 * m; x < ox + width - 5 * m; x += 5 * m) {
+          ctx.beginPath();
+          ctx.moveTo(x, oy);
+          ctx.lineTo(x, oy + height);
+          ctx.stroke();
+        }
+        ctx.setLineDash([]);
+      }
+      // 4. DIMENSIONS & COTAS
+      if (showDims) {
+        drawDimensionLine(ox, oy + height + 15, ox + width, oy + height + 15, '100,00 m');
+        drawDimensionLine(ox - 15, oy, ox - 15, oy + height, '50,00 m');
+      }
+      ctx.restore();
+    }
+    // --- HELPER DRAWING FUNCTIONS ---
+    // Draw Plant Icon / Circle
+    function drawPlantCircle(x, y, radius, fillColor, strokeColor) {
+      ctx.beginPath();
+      ctx.arc(x, y, radius, 0, Math.PI * 2);
+      ctx.fillStyle = fillColor;
+      ctx.fill();
+      ctx.strokeStyle = strokeColor;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
+    // Draw CAD Technical Dimension Line with Arrows & Text
+    function drawDimensionLine(x1, y1, x2, y2, text) {
+      ctx.save();
+      ctx.strokeStyle = '#f59e0b';
+      ctx.fillStyle = '#fbbf24';
+      ctx.lineWidth = 1.2;
+      ctx.font = '10px Fira Code, monospace';
+      // Main Dimension Line
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
+      // Tick marks / End caps
+      const isHorizontal = Math.abs(y1 - y2) < 2;
+      
+      if (isHorizontal) {
+        ctx.beginPath();
+        ctx.moveTo(x1, y1 - 4); ctx.lineTo(x1, y1 + 4);
+        ctx.moveTo(x2, y2 - 4); ctx.lineTo(x2, y2 + 4);
+        ctx.stroke();
+        ctx.textAlign = 'center';
+        ctx.fillText(text, (x1 + x2) / 2, y1 + 12);
+      } else {
+        ctx.beginPath();
+        ctx.moveTo(x1 - 4, y1); ctx.lineTo(x1 + 4, y1);
+        ctx.moveTo(x2 - 4, y2); ctx.lineTo(x2 + 4, y2);
+        ctx.stroke();
+        ctx.save();
+        ctx.translate(x1 - 8, (y1 + y2) / 2);
+        ctx.rotate(-Math.PI / 2);
+        ctx.textAlign = 'center';
+        ctx.fillText(text, 0, 0);
+        ctx.restore();
+      }
+      ctx.restore();
+    }
+    // --- INTERACTIVITY & TOOLTIP HANDLERS ---
+    
+    // Mouse Dragging (Pan) & Click Detection
+    canvas.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      startX = e.clientX - panX;
+      startY = e.clientY - panY;
+    });
+    window.addEventListener('mouseup', () => {
+      isDragging = false;
+    });
+    canvas.addEventListener('mousemove', (e) => {
+      if (isDragging) {
+        panX = e.clientX - startX;
+        panY = e.clientY - startY;
+        drawCanvas();
+      } else {
+        // Handle Tooltip Hover Detection
+        const rect = canvas.getBoundingClientRect();
+        const mouseX = (e.clientX - rect.left - panX) / scale;
+        const mouseY = (e.clientY - rect.top - panY) / scale;
+        let found = null;
+        for (let obj of interactiveObjects) {
+          if (mouseX >= obj.x && mouseX <= obj.x + obj.w &&
+              mouseY >= obj.y && mouseY <= obj.y + obj.h) {
+            found = obj;
+            break;
+          }
+        }
+        const tooltip = document.getElementById('tooltip');
+        if (found) {
+          document.getElementById('tooltip-title').innerHTML = `<span>${found.title}</span> <i class="fa-solid fa-circle-info text-xs"></i>`;
+          document.getElementById('tooltip-content').innerHTML = found.details.map(d => `<div class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>${d}</div>`).join('');
+          
+          tooltip.style.left = `${e.clientX - rect.left + 15}px`;
+          tooltip.style.top = `${e.clientY - rect.top + 15}px`;
+          tooltip.classList.remove('hidden');
+        } else {
+          tooltip.classList.add('hidden');
+        }
+      }
+    });
+    // Mouse Wheel Zooming
+    canvas.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      const zoomFactor = e.deltaY < 0 ? 1.1 : 0.9;
+      zoomCanvas(zoomFactor);
+    }, { passive: false });
+    // Touch Support for Mobile Dragging
+    canvas.addEventListener('touchstart', (e) => {
+      if (e.touches.length === 1) {
+        isDragging = true;
+        startX = e.touches[0].clientX - panX;
+        startY = e.touches[0].clientY - panY;
+      }
+    });
+    canvas.addEventListener('touchmove', (e) => {
+      if (isDragging && e.touches.length === 1) {
+        panX = e.touches[0].clientX - startX;
+        panY = e.touches[0].clientY - startY;
+        drawCanvas();
+      }
+    });
+    canvas.addEventListener('touchend', () => {
+      isDragging = false;
+    });
+    // --- INITIALIZATION ON WINDOW LOAD ---
+    window.onload = function() {
+      resizeCanvas();
+      resetCamera();
+      updatePanelData();
+    };
+  </script>
+</body>
+</html>
+</html>
